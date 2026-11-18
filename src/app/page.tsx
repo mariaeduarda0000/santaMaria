@@ -1,69 +1,865 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState, useRef } from 'react';
+
+// Subcomponente para o contador de quantidade dos produtos
+const QuantityInput = () => {
+  const [qty, setQty] = useState(1);
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex items-center bg-surface-container-low rounded-lg p-0.5">
+      <button 
+        type="button" 
+        className="w-7 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container rounded text-body-md font-bold" 
+        onClick={() => setQty(prev => Math.max(1, prev - 1))}
+      >
+        -
+      </button>
+      <input 
+        className="w-8 text-center bg-transparent font-code-sm text-code-sm font-semibold text-on-surface focus:outline-none" 
+        readOnly 
+        type="text" 
+        value={qty} 
+      />
+      <button 
+        type="button" 
+        className="w-7 h-8 flex items-center justify-center text-on-surface hover:bg-surface-container rounded text-body-md font-bold" 
+        onClick={() => setQty(prev => Math.min(99, prev + 1))}
+      >
+        +
+      </button>
+    </div>
+  );
+};
+
+export default function PharmacyPage() {
+  const [fileName, setFileName] = useState('');
+  const [rxSuccess, setRxSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setFileName(e.target.files[0].name);
+    }
+  };
+
+  const handleRxSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setRxSuccess(true);
+    setFileName('');
+    e.currentTarget.reset();
+    
+    setTimeout(() => {
+      document.getElementById('rx-success')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 100);
+  };
+
+  return (
+    <>
+      <header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div className="bg-inverse-surface text-inverse-on-surface px-margin">
+          <div className="max-w-7xl mx-auto h-9 flex items-center justify-between text-body-sm">
+            <div className="flex items-center gap-space-md">
+              <span className="flex items-center gap-space-xs font-label-sm text-tertiary-fixed-dim">
+                <span className="material-symbols-outlined text-[16px]">support_agent</span>
+                Tele-Farmácia & WhatsApp 24h: (11) 98765-4321
+              </span>
+              <span className="text-outline-variant/40 hidden sm:inline">|</span>
+              <span className="hidden sm:inline font-body-sm text-inverse-on-surface/90">
+                Frete Grátis em compras acima de R$ 99
+              </span>
+            </div>
+            <div className="flex items-center gap-space-md">
+              <span className="flex items-center gap-space-xs text-body-sm text-inverse-on-surface/80">
+                <span className="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">local_shipping</span>
+                Entrega em: <strong className="font-label-sm text-inverse-on-surface">São Paulo - SP, Centro</strong>
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="px-margin bg-surface-container-lowest">
+          <div className="max-w-7xl mx-auto h-20 flex items-center justify-between gap-space-lg">
+            <div className="flex items-center gap-space-md shrink-0">
+              <img alt="Drogaria Santa Maria Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDxEZKi1Z_l8FwAfUqJAFX1z3b3zAjd1tOzCE3E9Wcu3uMV41mZ4frV-O1quNc-1waqbeQ43qh505M25miMZ_gMADav7eHHWBq8sAsXgNEGWS9WDme7anuOD4jl6NHZl0VwZIW-F-5RS8T_TmLrh6_ZRlHMYiDoFKcaQ560-gbPFtvC2xZGpBvhJl412CNuQAZqXow4oU_SE3U3nTuQpiOwsytmfM5XZJpJ3-sa0Iba6A" />
+              <div className="flex flex-col">
+                <span className="font-headline-md text-headline-md tracking-tight text-on-surface leading-none">Drogaria Santa Maria</span>
+                <span className="font-label-sm text-label-sm text-on-surface-variant font-medium tracking-wide">Farmácia & Manipulação</span>
+              </div>
+            </div>
+
+            <div className="flex-1 max-w-2xl hidden md:flex items-center">
+              <div className="flex w-full rounded-lg bg-surface-container-low p-1 gap-1">
+                <div className="relative flex items-center px-space-sm rounded bg-surface-container-lowest">
+                  <select className="appearance-none bg-transparent pr-space-lg pl-space-xs py-space-xs font-label-sm text-label-sm text-on-surface outline-none cursor-pointer">
+                    <option>Todas as Categorias</option>
+                    <option>Medicamentos</option>
+                    <option>Genéricos</option>
+                    <option>Manipulação</option>
+                    <option>Dermocosméticos</option>
+                    <option>Suplementos</option>
+                  </select>
+                  <span className="material-symbols-outlined absolute right-space-xs pointer-events-none text-on-surface-variant text-[18px]">expand_more</span>
+                </div>
+                <div className="relative flex-1 flex items-center">
+                  <input className="w-full bg-transparent px-space-md py-space-xs font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none" placeholder="Buscar medicamentos, dosagens, princípios ativos ou marcas..." type="text" />
+                  <button aria-label="Buscar" className="flex items-center justify-center px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors" type="button">
+                    <span className="material-symbols-outlined text-[20px]">search</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-space-md shrink-0">
+              <a className="hidden xl:flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-secondary text-on-secondary font-label-sm text-label-sm hover:bg-on-secondary-container transition-colors" href="#">
+                <span className="material-symbols-outlined text-[18px]">medical_services</span>Área Farmacêutico
+              </a>
+              <a className="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg bg-surface-container-high text-on-surface font-label-sm text-label-sm hover:bg-surface-container-highest transition-colors" href="#">
+                <span className="material-symbols-outlined text-[18px] text-primary-container">person</span>
+                <span className="hidden sm:inline">Minha Conta</span>
+              </a>
+              <a aria-label="Carrinho de Compras" className="relative flex items-center justify-center p-space-sm rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+                <span className="material-symbols-outlined text-[24px]">shopping_bag</span>
+                <span className="absolute -top-1 -right-1 flex items-center justify-center h-5 min-w-[20px] px-1 rounded-full bg-primary-container text-on-primary font-label-sm text-[10px] font-bold leading-none shadow-sm">3</span>
+              </a>
+              <div className="flex items-center gap-space-xs pl-space-xs">
+                <img alt="Profile" className="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTypaNWTxwWbhh7FqtdYIg2D-ZlBImKt8hpq4FPhkJKqDSbgIsoyJhjgiOAGC1PnZNqb7SRZ6fswbBX16H_vaDshMx7chVaNpWpg1ZYtRz27hnBwNEmGatyfuyy04pTu7qfJrRbrOevGhhMJiI7HPiIj26mT4FGn83FOpTwm6dUHruqNtDgB3rsmu4_IpzD3_LW3Rq3IdlJtmk7qI284a4hubjGIyUIw-IOkcMvPZT" />
+                <span className="material-symbols-outlined text-on-surface-variant text-[18px]">expand_more</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="px-margin bg-surface-container-low">
+          <div className="max-w-7xl mx-auto h-11 flex items-center justify-between">
+            <nav className="flex items-center gap-space-lg">
+              <a className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-2" href="#">Início / Catálogo</a>
+              <a className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-2" href="#">Ofertas da Semana</a>
+              <a className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-2" href="#">Manipulação</a>
+              <a className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors py-2" href="#">Sobre Nós</a>
+            </nav>
+            <div className="hidden md:flex items-center gap-space-md text-label-sm font-label-sm text-tertiary">
+              <span className="flex items-center gap-space-xs">
+                <span className="material-symbols-outlined text-[16px]">verified</span>Receituário Digital & Controle Sanitário
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="w-full pt-40 bg-surface">
+        <div className="flex flex-col w-full">
+          {/* Notification Pill */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-md">
+            <div className="bg-surface-container-low rounded-xl px-space-md py-space-xs flex flex-wrap items-center justify-between gap-space-sm shadow-sm">
+              <div className="flex items-center gap-space-sm">
+                <span className="flex h-2.5 w-2.5 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-container opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary-container"></span>
+                </span>
+                <span className="font-label-sm text-label-sm text-on-surface">Plantão Logístico Ativo:</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant">Entregas farmacêuticas expressas com raio de até 15km despachadas em até <strong>1h45min</strong>.</span>
+              </div>
+              <div className="flex items-center gap-space-md font-code-sm text-code-sm text-tertiary">
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">verified</span>Lotes Auditados Hoje</span>
+                <span className="text-outline-variant/50">•</span>
+                <span className="flex items-center gap-1"><span className="material-symbols-outlined text-[16px]">maps_ar</span>Cadeia Fria a 4.2°C</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Hero Section */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+              <div className="lg:col-span-8 relative overflow-hidden rounded-xl bg-gradient-to-br from-secondary-fixed to-surface-container-lowest p-space-xl flex flex-col justify-between shadow-sm min-h-[460px]">
+                <div className="absolute -right-24 -bottom-24 w-96 h-96 rounded-full bg-secondary/10 blur-3xl pointer-events-none"></div>
+                <div className="absolute right-0 top-0 bottom-0 w-1/2 opacity-25 lg:opacity-40 mix-blend-multiply pointer-events-none hidden sm:block">
+                  <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGvQTfxD6avOSjkFf63MOHX7cuVMvTTjTchQB-T9BNlzSD6a7eERZmlRFdflCKkloahZ40HB9TsEFI6jcJrYHD6vTnFF5FEwcT5krWkLD1_w5ujfujamisM2Q1Q14dklOvhYLpsfmwwrbTFYZFJPHSk2_INT3GnzmStJGJNMyLbIpnUhDi55BqNgkG4Obav17064uBRZXQxMnBuuqWbw_jt78Z5qB64OPBC93aX2c2')" }}></div>
+                </div>
+                <div className="relative z-10 max-w-xl">
+                  <div className="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-lowest text-primary-container shadow-sm mb-space-md">
+                    <span className="material-symbols-outlined text-[18px]">bolt</span>
+                    <span className="font-label-sm text-label-sm font-bold uppercase tracking-wider">Despacho Ultra Rápido • Até 2 Horas</span>
+                  </div>
+                  <h1 className="font-display-lg text-display-lg text-on-surface tracking-tight leading-tight mb-space-sm">
+                    Cuidado Contínuo, <span className="text-primary-container">Preço Justo</span> & Precisão Farmacêutica.
+                  </h1>
+                  <p className="font-body-lg text-body-lg text-on-surface-variant max-w-lg mb-space-lg">
+                    Garanta seus tratamentos regulares com até <strong>45% OFF</strong> em genéricos certificados, polivitamínicos puros e dermocosméticos de grau clínico.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-space-md">
+                    <a className="px-space-lg py-space-md rounded-lg bg-primary-container text-on-primary font-label-md text-label-md shadow-md hover:bg-primary transition-all flex items-center gap-space-xs group" href="#catalogo-destaques">
+                      <span>Explorar Ofertas do Mês</span>
+                      <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                    <a className="px-space-lg py-space-md rounded-lg bg-surface-container-lowest text-secondary font-label-md text-label-md shadow-sm hover:bg-surface-container transition-all flex items-center gap-space-xs" href="#receituario-digital">
+                      <span className="material-symbols-outlined text-[20px] text-tertiary">upload_file</span>
+                      <span>Comprar com Receita</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="relative z-10 pt-space-lg mt-space-lg border-t-0 flex flex-wrap items-center gap-space-xl">
+                  <div className="flex items-center gap-space-sm">
+                    <div className="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary-container shadow-sm">
+                      <span className="material-symbols-outlined text-[20px]">ecg_heart</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-label-sm text-label-sm text-on-surface leading-tight font-bold">100% Procedência</span>
+                      <span className="font-body-sm text-body-sm text-on-surface-variant">Rastreabilidade ANVISA</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-sm">
+                    <div className="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-tertiary shadow-sm">
+                      <span className="material-symbols-outlined text-[20px]">medical_services</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-label-sm text-label-sm text-on-surface leading-tight font-bold">Plantão Farmacêutico</span>
+                      <span className="font-body-sm text-body-sm text-on-surface-variant">Orientação gratuita 24h</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-sm">
+                    <div className="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-secondary shadow-sm">
+                      <span className="material-symbols-outlined text-[20px]">moped</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-label-sm text-label-sm text-on-surface leading-tight font-bold">Express SP & Região</span>
+                      <span className="font-body-sm text-body-sm text-on-surface-variant">Temperatura controlada</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-4 flex flex-col gap-space-md">
+                <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between flex-1 relative overflow-hidden group">
+                  <div className="flex items-start justify-between gap-space-xs mb-space-sm">
+                    <div>
+                      <span className="font-code-sm text-code-sm text-primary-container uppercase tracking-wider font-semibold">Programa Cuidados</span>
+                      <h2 className="font-headline-md text-headline-md text-on-surface mt-1">Uso Contínuo & Hipertensão</h2>
+                    </div>
+                    <span className="px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">-38%</span>
+                  </div>
+                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+                    Economize programando a entrega mensal de anti-hipertensivos, estatinas e hipoglicemiantes sem risco de interrupção.
+                  </p>
+                  <div className="flex items-center justify-between pt-space-xs">
+                    <div className="flex flex-col">
+                      <span className="font-body-sm text-body-sm text-on-surface-variant line-through">De R$ 112,90</span>
+                      <span className="font-headline-lg text-headline-lg text-primary-container font-bold">R$ 69,99<span className="font-body-sm text-body-sm text-on-surface-variant font-normal">/mês</span></span>
+                    </div>
+                    <button aria-label="Ver programa" className="p-space-sm rounded-lg bg-surface-container-high text-on-surface hover:bg-secondary hover:text-on-secondary transition-colors">
+                      <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                    </button>
+                  </div>
+                </div>
+                <div className="bg-secondary-fixed/50 rounded-xl p-space-lg shadow-sm flex flex-col justify-between flex-1 relative overflow-hidden">
+                  <div className="flex items-start justify-between gap-space-xs mb-space-sm">
+                    <div>
+                      <span className="font-code-sm text-code-sm text-tertiary uppercase tracking-wider font-semibold">Dermo Clínico</span>
+                      <h2 className="font-headline-md text-headline-md text-on-surface mt-1">Fotoproteção Médica</h2>
+                    </div>
+                    <span className="px-2.5 py-1 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Brinde Exclusivo</span>
+                  </div>
+                  <p className="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+                    Compre 1 Protetor FPS 70 e receba Gel de Limpeza Suave 50g para renovação da barreira cutânea.
+                  </p>
+                  <div className="flex items-center justify-between pt-space-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-lowest text-on-surface">Toque Ultra Seco</span>
+                      <span className="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-lowest text-on-surface">Anti-oleosidade</span>
+                    </div>
+                    <button aria-label="Ver ofertas dermatológicas" className="p-space-sm rounded-lg bg-surface-container-lowest text-secondary hover:bg-surface-container-highest transition-colors">
+                      <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Categories */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl">
+            <div className="flex items-center justify-between mb-space-md">
+              <div>
+                <span className="font-code-sm text-code-sm uppercase tracking-wider text-secondary font-semibold">Navegação Clínica Rápida</span>
+                <h2 className="font-headline-lg text-headline-lg text-on-surface">Categorias em Destaque</h2>
+              </div>
+              <a className="font-label-md text-label-md text-secondary hover:underline flex items-center gap-1" href="#">
+                <span>Ver todas as 28 categorias</span>
+                <span className="material-symbols-outlined text-[16px]">arrow_right_alt</span>
+              </a>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-space-md">
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-primary-fixed/40 text-primary-container flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">prescriptions</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-primary-container transition-colors">Medicamentos</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Éticos e Genéricos</span>
+              </a>
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-tertiary-fixed/40 text-tertiary flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">spa</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-tertiary transition-colors">Dermocosméticos</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Tratamento e Sol</span>
+              </a>
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">vital_signs</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-secondary transition-colors">Vitaminas</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Suplementação Ativa</span>
+              </a>
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-surface-container text-on-surface flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">clean_hands</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-primary transition-colors">Cuidados Diários</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Higiene e Proteção</span>
+              </a>
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-primary-fixed/30 text-primary flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">child_care</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-primary transition-colors">Mamãe & Bebê</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Fórmulas e Fraldas</span>
+              </a>
+              <a className="group bg-surface-container-lowest hover:bg-surface-container-low rounded-xl p-space-md shadow-sm transition-all duration-200 flex flex-col items-center text-center" href="#">
+                <div className="w-14 h-14 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center mb-space-sm group-hover:scale-110 transition-transform">
+                  <span className="material-symbols-outlined text-[28px]">devices_wearables</span>
+                </div>
+                <span className="font-headline-md text-title-md text-on-surface group-hover:text-secondary transition-colors">Aparelhos & Testes</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Glicosímetros e Pressão</span>
+              </a>
+            </div>
+          </section>
+
+          {/* Product Grid */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl" id="catalogo-destaques">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2.5 h-2.5 rounded-full bg-primary-container"></span>
+                  <span className="font-code-sm text-code-sm uppercase tracking-wider text-primary-container font-semibold">Ofertas Validadas pelo Farmacêutico</span>
+                </div>
+                <h2 className="font-headline-xl text-headline-xl text-on-surface">Medicamentos e Itens Mais Procurados</h2>
+              </div>
+              <div className="flex flex-wrap items-center gap-1.5 bg-surface-container-low p-1 rounded-lg">
+                <button className="px-space-md py-1 rounded bg-surface-container-lowest shadow-sm font-label-sm text-label-sm text-on-surface font-bold">Todos</button>
+                <button className="px-space-md py-1 rounded hover:bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-colors">Genéricos</button>
+                <button className="px-space-md py-1 rounded hover:bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-colors">Sem Receita</button>
+                <button className="px-space-md py-1 rounded hover:bg-surface-container font-label-sm text-label-sm text-on-surface-variant transition-colors">Imunidade</button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+              {/* Product 1 */}
+              <article className="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative group">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-space-sm">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-surface-container-high text-on-surface font-semibold uppercase">Genérico</span>
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-semibold">Sem Retenção</span>
+                  </div>
+                  <div className="w-full h-44 rounded-lg bg-surface-bright flex items-center justify-center p-space-sm mb-space-md overflow-hidden relative">
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[10px] font-bold">-42%</div>
+                    <img alt="Dipirona" className="max-h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZhG_gVpESP35KQNw9BPDmo2eBGTASJB0ds2JAUMi97aUBWIrB1Yit859aNjUFkHAytMuWLu4uYotKDExYdbtLiS9ZDNMy853QiCkwj4f6a-apZ8Uf6uNh84TvxI04M0YcVC9fhqhcL_HBloc6UyrR5oDuGE8Rl8QIC7qinyrANEaOj5gOmxYTpytOcw6SNLiMwn1g1xcUQABH_hEKusH2kc_nUCEyEq2APzl0LktM" />
+                  </div>
+                  <div className="mb-space-sm">
+                    <span className="inline-block px-2 py-0.5 rounded bg-surface-container-low font-code-sm text-code-sm text-secondary font-medium mb-1">500mg • 20 Comprimidos</span>
+                    <h3 className="font-headline-md text-title-md text-on-surface font-bold leading-snug group-hover:text-primary-container transition-colors">Dipirona Monoidratada 500mg</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">Prati-Donaduzzi Farmacêutica</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-space-md pt-space-xs">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-body-sm text-body-sm text-on-surface-variant line-through">R$ 13,90</span>
+                      <span className="font-label-sm text-label-sm text-tertiary font-bold">Economize R$ 5,91</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-label-md text-label-md text-primary-container font-bold">R$</span>
+                      <span className="font-headline-xl text-headline-xl text-primary-container font-bold">7,99</span>
+                      <span className="font-code-sm text-[11px] text-on-surface-variant ml-1">(R$ 0,40 / comp)</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <QuantityInput />
+                    <button className="flex-1 py-space-xs px-space-sm rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm">
+                      <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                      <span>Comprar</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              {/* Product 2 */}
+              <article className="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative group">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-space-sm">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-surface-container-high text-on-surface font-semibold uppercase">Genérico</span>
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-error-container text-on-error-container font-semibold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-[12px]">clinical_notes</span>Tarja Vermelha
+                    </span>
+                  </div>
+                  <div className="w-full h-44 rounded-lg bg-surface-bright flex items-center justify-center p-space-sm mb-space-md overflow-hidden relative">
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[10px] font-bold">-35%</div>
+                    <img alt="Losartana" className="max-h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA042VeIxyLIo_P8djBfTeign0t890Y8G-E-vGCefcpESDiPVNdPSh2WcLlOrz4z8y929ppkXdRNgsu998Pl3IgeorVCPNOEyVZnNATqSAX7_L7Vf82az414U982duIwDtIZ6zqam9TjajpHrjqX1FQ6j3BdVhorcM9vY6KV45veeSoR_C0GMEAI7lWb6V3SdDZrp88-nISVKclEQqRCWxDN6CRQCrLHdnnFHd9ZCJI" />
+                  </div>
+                  <div className="mb-space-sm">
+                    <span className="inline-block px-2 py-0.5 rounded bg-surface-container-low font-code-sm text-code-sm text-secondary font-medium mb-1">50mg • 30 Comprimidos</span>
+                    <h3 className="font-headline-md text-title-md text-on-surface font-bold leading-snug group-hover:text-primary-container transition-colors">Losartana Potássica 50mg</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">EMS S/A • Anti-hipertensivo</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-space-md pt-space-xs">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-body-sm text-body-sm text-on-surface-variant line-through">R$ 18,50</span>
+                      <span className="font-label-sm text-label-sm text-tertiary font-bold">Sob Prescrição</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-label-md text-label-md text-primary-container font-bold">R$</span>
+                      <span className="font-headline-xl text-headline-xl text-primary-container font-bold">11,99</span>
+                      <span className="font-code-sm text-[11px] text-on-surface-variant ml-1">(R$ 0,39 / comp)</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <QuantityInput />
+                    <button className="flex-1 py-space-xs px-space-sm rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm">
+                      <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                      <span>Comprar</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              {/* Product 3 */}
+              <article className="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative group">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-space-sm">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-secondary-fixed text-on-secondary-fixed font-semibold uppercase">Suplemento</span>
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-semibold">Livre Venda</span>
+                  </div>
+                  <div className="w-full h-44 rounded-lg bg-surface-bright flex items-center justify-center p-space-sm mb-space-md overflow-hidden relative">
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[10px] font-bold">-20%</div>
+                    <img alt="Vitamina C" className="max-h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDpv_P8uo4xRJP9WkqcJAMtV1VzbuKrS4vYrsniznPbjVsPR7nCkaeIyTaMMWvG6o8eQNC7w6sjsnGsGoVFhCfzcvxoC55eYpPRDQsawqIWuDx4V4Z1_ok-8J6qn8KnrOz0ISt1ukMKzo4pyI0vHl3glmx8cXA7Ms5AP_2py58nqEaCxrWD6GHCnL2sBdGo6PqdevPf_CguRUGAPIKqyrGk_L9nhnFITJsWBshSnf4" />
+                  </div>
+                  <div className="mb-space-sm">
+                    <span className="inline-block px-2 py-0.5 rounded bg-surface-container-low font-code-sm text-code-sm text-secondary font-medium mb-1">1000mg + Zinco • 30 Tabs</span>
+                    <h3 className="font-headline-md text-title-md text-on-surface font-bold leading-snug group-hover:text-primary-container transition-colors">Vitamina C 1g Efervescente</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">Sabor Laranja • Santa Maria Bio</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-space-md pt-space-xs">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-body-sm text-body-sm text-on-surface-variant line-through">R$ 34,90</span>
+                      <span className="font-label-sm text-label-sm text-tertiary font-bold">Imunidade Ativa</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-label-md text-label-md text-primary-container font-bold">R$</span>
+                      <span className="font-headline-xl text-headline-xl text-primary-container font-bold">27,90</span>
+                      <span className="font-code-sm text-[11px] text-on-surface-variant ml-1">(R$ 0,93 / dose)</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <QuantityInput />
+                    <button className="flex-1 py-space-xs px-space-sm rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm">
+                      <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                      <span>Comprar</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+
+              {/* Product 4 */}
+              <article className="bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-shadow p-space-md flex flex-col justify-between relative group">
+                <div>
+                  <div className="flex items-center justify-between gap-1 mb-space-sm">
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-secondary-fixed text-on-secondary-fixed font-semibold uppercase">Dermo Clínico</span>
+                    <span className="px-2 py-0.5 rounded text-[11px] font-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-semibold">Toque Seco</span>
+                  </div>
+                  <div className="w-full h-44 rounded-lg bg-surface-bright flex items-center justify-center p-space-sm mb-space-md overflow-hidden relative">
+                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-label-sm text-[10px] font-bold">-25%</div>
+                    <img alt="Protetor Solar" className="max-h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKjsg0Wcqy_lueDpiTL9oRCzTPVPU7dO5Od0jRprCwNnZVWjINwmYLwZs3V7CR1chvI7GQCABwrK40Qri5WGPb21yjo0t6zMd3CXCCBBIUWSplhL0uaYSGxrBh4JxEwlorp3zBBzvMFe6XuH9fHaw-3HyVxbwM5Ao-GXthEjHjICdSBkAKQrPdesgvXwe3uHHjYRE1EKIlYOwWPA3hekFhgNw1oeL87BbAvZuL1AjY" />
+                  </div>
+                  <div className="mb-space-sm">
+                    <span className="inline-block px-2 py-0.5 rounded bg-surface-container-low font-code-sm text-code-sm text-secondary font-medium mb-1">FPS 70 • Gel-Creme 50g</span>
+                    <h3 className="font-headline-md text-title-md text-on-surface font-bold leading-snug group-hover:text-primary-container transition-colors">Protetor Solar FPS 70 Toque Seco</h3>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant">Controle de Oleosidade 12h</p>
+                  </div>
+                </div>
+                <div>
+                  <div className="mb-space-md pt-space-xs">
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-body-sm text-body-sm text-on-surface-variant line-through">R$ 89,90</span>
+                      <span className="font-label-sm text-label-sm text-tertiary font-bold">Leve + 1 Brinde</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-label-md text-label-md text-primary-container font-bold">R$</span>
+                      <span className="font-headline-xl text-headline-xl text-primary-container font-bold">67,40</span>
+                      <span className="font-code-sm text-[11px] text-on-surface-variant ml-1">(R$ 1,34 / g)</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-space-xs">
+                    <QuantityInput />
+                    <button className="flex-1 py-space-xs px-space-sm rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-colors shadow-sm">
+                      <span className="material-symbols-outlined text-[18px]">shopping_bag</span>
+                      <span>Comprar</span>
+                    </button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          {/* Rx Upload Form */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl" id="receituario-digital">
+            <div className="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+              <div className="lg:col-span-5 bg-gradient-to-br from-secondary to-inverse-surface p-space-xl text-inverse-on-surface flex flex-col justify-between relative">
+                <div className="relative z-10">
+                  <div className="inline-flex items-center gap-space-xs px-3 py-1 rounded-full bg-surface-container-lowest/15 backdrop-blur-sm text-tertiary-fixed-dim text-label-sm font-label-sm mb-space-md">
+                    <span className="material-symbols-outlined text-[16px]">verified</span>
+                    <span>Canal Regulamentado ANVISA CRF-SP</span>
+                  </div>
+                  <h2 className="font-headline-xl text-headline-xl mb-space-sm text-inverse-on-surface">Envie sua Receita Médica Sem Sair de Casa</h2>
+                  <p className="font-body-md text-body-md text-inverse-on-surface/80 mb-space-lg">
+                    Nossos farmacêuticos credenciados analisam sua prescrição (foto legível ou PDF com assinatura ICP-Brasil), validam as dosagens e criam um carrinho pronto com as melhores opções de similares e genéricos.
+                  </p>
+                  <div className="flex flex-col gap-space-md mb-space-lg">
+                    <div className="flex items-start gap-space-sm">
+                      <div className="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0 text-label-sm font-bold">1</div>
+                      <div>
+                        <span className="font-label-md text-label-md block text-inverse-on-surface">Faça o upload do documento</span>
+                        <span className="font-body-sm text-body-sm text-inverse-on-surface/70">Foto do receituário físico ou PDF digitalizado.</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-space-sm">
+                      <div className="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0 text-label-sm font-bold">2</div>
+                      <div>
+                        <span className="font-label-md text-label-md block text-inverse-on-surface">Triagem em até 10 minutos</span>
+                        <span className="font-body-sm text-body-sm text-inverse-on-surface/70">O farmacêutico de plantão confere CRM e posologia.</span>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-space-sm">
+                      <div className="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary flex items-center justify-center shrink-0 text-label-sm font-bold">3</div>
+                      <div>
+                        <span className="font-label-md text-label-md block text-inverse-on-surface">Entrega rápida em embalagem lacrada</span>
+                        <span className="font-body-sm text-body-sm text-inverse-on-surface/70">Receba no mesmo dia com nota fiscal e bula explicativa.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="relative z-10 p-space-md rounded-lg bg-surface-container-lowest/10 backdrop-blur-sm flex items-center gap-space-md">
+                  <img alt="Farmacêutica de Plantão" className="w-12 h-12 rounded-full object-cover shadow-sm shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTypaNWTxwWbhh7FqtdYIg2D-ZlBImKt8hpq4FPhkJKqDSbgIsoyJhjgiOAGC1PnZNqb7SRZ6fswbBX16H_vaDshMx7chVaNpWpg1ZYtRz27hnBwNEmGatyfuyy04pTu7qfJrRbrOevGhhMJiI7HPiIj26mT4FGn83FOpTwm6dUHruqNtDgB3rsmu4_IpzD3_LW3Rq3IdlJtmk7qI284a4hubjGIyUIw-IOkcMvPZT" />
+                  <div className="flex flex-col">
+                    <span className="font-label-md text-label-md text-inverse-on-surface">Dra. Camila Nogueira</span>
+                    <span className="font-code-sm text-code-sm text-tertiary-fixed-dim">CRF-SP 52.140 • Plantão Ativo Agora</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7 p-space-xl flex flex-col justify-between bg-surface-container-lowest">
+                <div>
+                  <div className="flex items-center justify-between mb-space-md">
+                    <div>
+                      <span className="font-code-sm text-code-sm uppercase tracking-wider text-secondary font-semibold">Formulário Seguro</span>
+                      <h3 className="font-headline-lg text-headline-lg text-on-surface">Envio de Prescrição Médica</h3>
+                    </div>
+                    <span className="material-symbols-outlined text-[32px] text-tertiary">lock</span>
+                  </div>
+                  <form className="flex flex-col gap-space-md" onSubmit={handleRxSubmit}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                      <div className="flex flex-col gap-1">
+                        <label className="font-label-sm text-label-sm text-on-surface">Nome Completo do Paciente *</label>
+                        <input required type="text" className="h-11 px-space-md rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all" placeholder="Ex: Roberto Silva Mendes" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="font-label-sm text-label-sm text-on-surface">WhatsApp / Telefone para Contato *</label>
+                        <input required type="tel" className="h-11 px-space-md rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all" placeholder="(11) 98765-4321" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                      <div className="flex flex-col gap-1">
+                        <label className="font-label-sm text-label-sm text-on-surface">CEP de Entrega *</label>
+                        <input required type="text" className="h-11 px-space-md rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all" placeholder="01310-100" />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <label className="font-label-sm text-label-sm text-on-surface">Preferência de Medicamento</label>
+                        <select className="h-11 px-space-md rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all cursor-pointer">
+                          <option>Genéricos mais econômicos (preferencial)</option>
+                          <option>Medicamentos de Referência (Marca original)</option>
+                          <option>Avaliação de Manipulação Personalizada</option>
+                          <option>Deixar farmacêutico sugerir a melhor opção</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="font-label-sm text-label-sm text-on-surface">Arquivo da Receita (Foto, PDF ou Documento Assinado)</label>
+                      <div 
+                        className="cursor-pointer border-2 border-dashed border-secondary/30 rounded-xl p-space-lg flex flex-col items-center justify-center text-center bg-surface-container-low/50 hover:bg-surface-container-low transition-colors" 
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <div className="w-12 h-12 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center mb-space-sm">
+                          <span className="material-symbols-outlined text-[24px]">cloud_upload</span>
+                        </div>
+                        <p className="font-label-md text-label-md text-on-surface mb-0.5">
+                          Clique para selecionar ou arraste o arquivo aqui
+                        </p>
+                        <p className="font-body-sm text-body-sm text-on-surface-variant">
+                          Formatos aceitos: JPG, PNG, PDF (Até 15MB) • Conexão criptografada ponta a ponta
+                        </p>
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          ref={fileInputRef} 
+                          onChange={handleFileSelected} 
+                        />
+                        {fileName && (
+                          <div className="mt-2 font-code-sm text-code-sm text-tertiary font-bold flex items-center gap-1">
+                            <span className="material-symbols-outlined text-[16px]">check_circle</span>
+                            <span>{fileName}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="font-label-sm text-label-sm text-on-surface">Observações para o Farmacêutico (Opcional)</label>
+                      <textarea className="p-space-sm rounded-lg bg-surface-container-low font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/60 focus:outline-none focus:bg-surface-container-lowest focus:ring-2 focus:ring-secondary/40 transition-all" placeholder="Ex: Sou alérgico a dipirona, prefiro embalagens de uso prolongado de 60 dias..." rows={2}></textarea>
+                    </div>
+                    <button type="submit" className="w-full py-space-md rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-all flex items-center justify-center gap-space-xs shadow-md">
+                      <span className="material-symbols-outlined text-[20px]">send</span>
+                      <span>Enviar Prescrição para Cotação Imediata</span>
+                    </button>
+                  </form>
+                </div>
+                
+                {rxSuccess && (
+                  <div id="rx-success" className="mt-space-md p-space-md rounded-lg bg-on-tertiary-container text-on-surface flex items-center gap-space-sm">
+                    <span className="material-symbols-outlined text-tertiary text-[24px]">task_alt</span>
+                    <div className="flex flex-col">
+                      <span className="font-label-md text-label-md text-on-surface">Receita Recebida com Sucesso!</span>
+                      <span className="font-body-sm text-body-sm text-on-surface-variant">Nossa farmacêutica de plantão entrará em contato via WhatsApp em até 7 minutos com o orçamento.</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Banner */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl">
+            <div className="rounded-xl bg-surface-container-low p-space-lg shadow-sm">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg items-center divide-y md:divide-y-0 md:divide-x-0">
+                <div className="flex items-start gap-space-md">
+                  <div className="w-12 h-12 rounded-xl bg-surface-container-lowest text-tertiary flex items-center justify-center shrink-0 shadow-sm">
+                    <span className="material-symbols-outlined text-[28px]">format_image_left</span>
+                  </div>
+                  <div>
+                    <h4 className="font-label-md text-label-md text-on-surface font-bold">Autorização ANVISA & SNGPC</h4>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                      Todos os lotes e substâncias controladas são reportados diretamente ao Sistema Nacional de Gerenciamento de Produtos Controlados.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-space-md">
+                  <div className="w-12 h-12 rounded-xl bg-surface-container-lowest text-secondary flex items-center justify-center shrink-0 shadow-sm">
+                    <span className="material-symbols-outlined text-[28px]">thermostat</span>
+                  </div>
+                  <div>
+                    <h4 className="font-label-md text-label-md text-on-surface font-bold">Cadeia de Frio Vigiada 24/7</h4>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                      Insulinas e termolábeis transportados em caixas isotérmicas com sensores térmicos ativos de 2°C a 8°C.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-space-md">
+                  <div className="w-12 h-12 rounded-xl bg-surface-container-lowest text-primary-container flex items-center justify-center shrink-0 shadow-sm">
+                    <span className="material-symbols-outlined text-[28px]">receipt_long</span>
+                  </div>
+                  <div>
+                    <h4 className="font-label-md text-label-md text-on-surface font-bold">Programa PBM & Convênios</h4>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-1">
+                      Aceitamos os principais programas de benefícios em medicamentos (Vidalink, Funcional Card, Orizon e Epharma).
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Testimonials */}
+          <section className="max-w-7xl mx-auto w-full px-margin mb-space-xl">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-lg">
+              <div>
+                <span className="font-code-sm text-code-sm uppercase tracking-wider text-secondary font-semibold">Avaliações Verificadas</span>
+                <h2 className="font-headline-xl text-headline-xl text-on-surface">Confiança de Quem Cuida da Família Conosco</h2>
+              </div>
+              <div className="flex items-center gap-space-xs text-on-surface">
+                <div className="flex text-amber-500">
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                  <span className="material-symbols-outlined text-[20px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                </div>
+                <span className="font-headline-md text-headline-md font-bold">4.9 / 5.0</span>
+                <span className="font-body-sm text-body-sm text-on-surface-variant ml-1">(mais de 14.800 pedidos entregues)</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+              <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-space-sm">
+                    <div className="flex text-amber-500">
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    </div>
+                    <span className="font-code-sm text-code-sm text-on-surface-variant">Ontem, 16:40</span>
+                  </div>
+                  <p className="font-body-md text-body-md text-on-surface mb-space-md italic">
+                    "Enviei a foto da receita do meu pai para pressão e colesterol pelo site. Em 5 minutos a farmacêutica me chamou no WhatsApp confirmando a dosagem de Losartana e o genérico mais barato. Chegou em casa em 1 hora e meia!"
+                  </p>
+                </div>
+                <div className="flex items-center gap-space-sm pt-space-sm">
+                  <div className="w-10 h-10 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center font-label-md font-bold">MS</div>
+                  <div className="flex flex-col">
+                    <span className="font-label-md text-label-md text-on-surface">Mariana Silveira</span>
+                    <span className="font-body-sm text-body-sm text-tertiary flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[14px]">check_circle</span> Cliente Recorrente • Higienópolis
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-space-sm">
+                    <div className="flex text-amber-500">
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    </div>
+                    <span className="font-code-sm text-code-sm text-on-surface-variant">Há 3 dias</span>
+                  </div>
+                  <p className="font-body-md text-body-md text-on-surface mb-space-md italic">
+                    "Excelente rigor com a insulina. O entregador trouxe em bolsa térmica com gelo seco e termômetro visível marcando 4 graus. Nenhuma outra farmácia online tinha me entregue com tanto cuidado técnico."
+                  </p>
+                </div>
+                <div className="flex items-center gap-space-sm pt-space-sm">
+                  <div className="w-10 h-10 rounded-full bg-surface-container text-on-surface flex items-center justify-center font-label-md font-bold">CA</div>
+                  <div className="flex flex-col">
+                    <span className="font-label-md text-label-md text-on-surface">Carlos Alberto de Souza</span>
+                    <span className="font-body-sm text-body-sm text-tertiary flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[14px]">check_circle</span> Compra Verificada • Jardins
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-space-sm">
+                    <div className="flex text-amber-500">
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                      <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                    </div>
+                    <span className="font-code-sm text-code-sm text-on-surface-variant">Semana passada</span>
+                  </div>
+                  <p className="font-body-md text-body-md text-on-surface mb-space-md italic">
+                    "Compro as fórmulas e suplementos da minha bebê aqui. Os preços são sempre menores do que nas grandes redes de shopping e o frete grátis acima de R$ 99 é realmente rápido. Super recomendo a Santa Maria!"
+                  </p>
+                </div>
+                <div className="flex items-center gap-space-sm pt-space-sm">
+                  <div className="w-10 h-10 rounded-full bg-primary-fixed text-primary-container flex items-center justify-center font-label-md font-bold">RF</div>
+                  <div className="flex flex-col">
+                    <span className="font-label-md text-label-md text-on-surface">Renata Ferraz</span>
+                    <span className="font-body-sm text-body-sm text-tertiary flex items-center gap-0.5">
+                      <span className="material-symbols-outlined text-[14px]">check_circle</span> Mãe de primeira viagem • Moema
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Floating Action Button */}
+          <aside className="fixed bottom-6 right-6 z-40">
+            <a className="flex items-center gap-space-sm bg-tertiary text-on-tertiary px-space-md py-space-sm rounded-full shadow-lg hover:shadow-xl hover:bg-tertiary-container transition-all group" href="https://wa.me/5511987654321" rel="noopener noreferrer" target="_blank">
+              <span className="material-symbols-outlined text-[24px]">chat</span>
+              <span className="font-label-md text-label-md hidden sm:inline">Falar com Farmacêutico</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+            </a>
+          </aside>
         </div>
       </main>
-    </div>
+
+      <footer className="w-full bg-surface-container-low mt-space-xl pt-space-xl pb-space-lg text-on-surface">
+        <div className="max-w-7xl mx-auto px-margin">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-gutter pb-space-xl">
+            <div className="lg:col-span-2 flex flex-col gap-space-md">
+              <div className="flex items-center gap-space-md">
+                <img alt="Drogaria Santa Maria Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDxEZKi1Z_l8FwAfUqJAFX1z3b3zAjd1tOzCE3E9Wcu3uMV41mZ4frV-O1quNc-1waqbeQ43qh505M25miMZ_gMADav7eHHWBq8sAsXgNEGWS9WDme7anuOD4jl6NHZl0VwZIW-F-5RS8T_TmLrh6_ZRlHMYiDoFKcaQ560-gbPFtvC2xZGpBvhJl412CNuQAZqXow4oU_SE3U3nTuQpiOwsytmfM5XZJpJ3-sa0Iba6A" />
+                <span className="font-headline-md text-headline-md text-on-surface">Drogaria Santa Maria</span>
+              </div>
+              <p className="font-body-md text-body-md text-on-surface-variant max-w-sm">Compromisso ético, saúde e precisão farmacêutica. Ampla linha de medicamentos de referência, genéricos bioequivalentes e laboratório especializado em manipulação magistral.</p>
+              <div className="rounded-lg bg-surface-container-lowest p-space-md max-w-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+                <span className="font-label-md text-label-md text-on-surface flex items-center gap-space-xs mb-space-xs">
+                  <span className="material-symbols-outlined text-tertiary text-[18px]">verified_user</span>Credenciamento e Responsabilidade Técnica
+                </span>
+                <div className="font-code-sm text-code-sm text-on-surface-variant flex flex-col gap-0.5">
+                  <span>Farmacêutico Responsável: Dra. Helena Alencar Viana</span>
+                  <span>CRF-SP: 45.892-SP | AFE ANVISA: 1.34892.4</span>
+                  <span>Licença Sanitária Municipal: 3550308-2024-0019</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-space-sm">
+              <span className="font-headline-md text-title-md text-on-surface">Atendimento</span>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Central de Ajuda</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Tele-Farmácia 24h</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Envio de Receitas</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Política de Trocas</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Rastrear Pedido</a>
+            </div>
+            <div className="flex flex-col gap-space-sm">
+              <span className="font-headline-md text-title-md text-on-surface">Institucional</span>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Quem Somos</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Laboratório Magistral</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Nossas Filiais</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacidade & LGPD</a>
+              <a className="font-body-md text-body-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Termos e Condições</a>
+            </div>
+            <div className="flex flex-col gap-space-sm">
+              <span className="font-headline-md text-title-md text-on-surface">Boletim de Saúde</span>
+              <p className="font-body-sm text-body-sm text-on-surface-variant">Receba informativos clínicos, campanhas de vacinação e ofertas exclusivas no seu e-mail.</p>
+              <div className="flex flex-col gap-space-xs">
+                <input className="w-full px-space-md py-space-xs rounded-lg bg-surface-container-lowest font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant/70 focus:outline-none" placeholder="Seu e-mail profissional ou pessoal" type="email" />
+                <button className="w-full px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors flex items-center justify-center gap-space-xs" type="button">
+                  <span className="material-symbols-outlined text-[18px]">mark_email_read</span>Cadastrar
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md font-body-sm text-body-sm text-on-surface-variant">
+            <div className="flex items-center gap-space-md">
+              <span className="font-label-sm text-label-sm text-on-surface">Pagamento Seguro:</span>
+              <span className="px-2 py-1 rounded bg-surface-container-lowest font-code-sm text-code-sm">PIX</span>
+              <span className="px-2 py-1 rounded bg-surface-container-lowest font-code-sm text-code-sm">Cartão de Crédito</span>
+              <span className="px-2 py-1 rounded bg-surface-container-lowest font-code-sm text-code-sm">Boleto Bancário</span>
+              <span className="px-2 py-1 rounded bg-surface-container-lowest font-code-sm text-code-sm">Convênios Farmácia</span>
+            </div>
+            <div className="text-center md:text-right">
+              <p>© 2025 Drogaria Santa Maria S.A. Todos os direitos reservados. CNPJ 12.345.678/0001-90.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
   );
 }
