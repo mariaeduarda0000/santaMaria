@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Cores Principais - Material Design 3 */
+  --color-primary: #006874;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #97f0ff;
+  --color-on-primary-container: #001f24;
+  --color-primary-fixed: #97f0ff;
+
+  --color-secondary: #4a6267;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #cde7ec;
+  --color-on-secondary-container: #051f23;
+  --color-secondary-fixed: #cde7ec;
+
+  --color-tertiary: #525e7d;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #dae2ff;
+  --color-on-tertiary-container: #0e1b37;
+  --color-tertiary-fixed: #dae2ff;
+  --color-tertiary-fixed-dim: #b8c4e9;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #410002;
+
+  /* Superfícies e Fundos (Essencial para não dar erro de transparência) */
+  --color-surface: #f8fdff;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #3f484a;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f2f7f9;
+  --color-surface-container: #ececfa;
+  --color-surface-container-high: #e6ecf1;
+  --color-surface-container-highest: #e0e6eb;
+  --color-surface-bright: #f8fdff;
+
+  --color-inverse-surface: #2d3132;
+  --color-inverse-on-surface: #eff1f1;
+  
+  --color-outline: #6f797a;
+  --color-outline-variant: #bfc8ca;
+
+  /* Espaçamentos padronizados */
+  --spacing-space-xs: 0.5rem;
+  --spacing-space-sm: 0.75rem;
+  --spacing-space-md: 1rem;
+  --spacing-space-lg: 1.5rem;
+  --spacing-space-xl: 2rem;
+  --spacing-margin: 1.5rem;
+  --spacing-gutter: 1rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-surface text-on-surface antialiased;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
