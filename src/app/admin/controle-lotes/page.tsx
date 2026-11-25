@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 
 export default function ControleLotesSNGPCPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("todos");
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
@@ -16,7 +18,9 @@ export default function ControleLotesSNGPCPage() {
   const handleExportarXML = () => {
     const dummyXml =
       "data:text/xml;charset=utf-8," +
-      encodeURIComponent("<sngpc_inventario_drogaria_santa_maria crf='45892-SP' data='2024-06-24'></sngpc_inventario_drogaria_santa_maria>");
+      encodeURIComponent(
+        "<sngpc_inventario_drogaria_santa_maria crf='45892-SP' data='2024-06-24'></sngpc_inventario_drogaria_santa_maria>"
+      );
     const link = document.createElement("a");
     link.href = dummyXml;
     link.download = "sngpc_inventario_santa_maria.xml";
@@ -40,10 +44,16 @@ export default function ControleLotesSNGPCPage() {
           </p>
         </div>
         <div className="flex flex-wrap md:flex-col gap-2 shrink-0">
-          <button type="button" className="px-4 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-label-sm font-semibold flex items-center gap-2 shadow-sm hover:bg-surface-container transition-colors">
+          <button
+            type="button"
+            className="px-4 py-2 bg-surface-container-lowest text-on-surface rounded-lg font-label-sm font-semibold flex items-center gap-2 shadow-sm hover:bg-surface-container transition-colors"
+          >
             <span className="material-symbols-outlined text-[18px]">policy</span> Protocolo Rastreio Anvisa
           </button>
-          <button type="button" className="px-4 py-2 bg-error text-on-error rounded-lg font-label-sm font-semibold flex items-center gap-2 shadow-sm hover:opacity-90 transition-opacity">
+          <button
+            type="button"
+            className="px-4 py-2 bg-error text-on-error rounded-lg font-label-sm font-semibold flex items-center gap-2 shadow-sm hover:opacity-90 transition-opacity"
+          >
             <span className="material-symbols-outlined text-[18px]">block</span> Bloquear Vendas em PDV
           </button>
         </div>
@@ -63,7 +73,10 @@ export default function ControleLotesSNGPCPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="px-4 py-2 flex items-center gap-2 rounded-lg text-on-surface bg-surface-container-low hover:bg-surface-container transition-colors text-label-sm font-semibold">
+          <button
+            type="button"
+            className="px-4 py-2 flex items-center gap-2 rounded-lg text-on-surface bg-surface-container-low hover:bg-surface-container transition-colors text-label-sm font-semibold"
+          >
             <span className="material-symbols-outlined text-[18px]">balance</span> Ajuste de Balanço
           </button>
           <button
@@ -83,8 +96,93 @@ export default function ControleLotesSNGPCPage() {
         </div>
       </div>
 
+      {/* Cards de Indicadores (KPIs) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="rounded-xl bg-surface-container-lowest p-5 shadow-sm border border-surface-container flex flex-col gap-2">
+          <div className="flex items-center justify-between text-on-surface-variant">
+            <span className="font-label-sm font-semibold uppercase tracking-wider">Lotes Ativos</span>
+            <span className="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-headline-md font-bold text-on-surface">284</span>
+            <span className="font-code-sm text-tertiary font-semibold">+12 esta semana</span>
+          </div>
+          <span className="font-body-sm text-on-surface-variant">R$ 148.920,00 em estoque</span>
+        </div>
+
+        <div className="rounded-xl bg-surface-container-lowest p-5 shadow-sm border border-surface-container flex flex-col gap-2">
+          <div className="flex items-center justify-between text-on-surface-variant">
+            <span className="font-label-sm font-semibold uppercase tracking-wider">Crítico (&lt; 30 dias)</span>
+            <span className="material-symbols-outlined text-error text-[20px]">event_busy</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-headline-md font-bold text-error">09</span>
+            <span className="font-code-sm text-error font-semibold">Ação imediata</span>
+          </div>
+          <span className="font-body-sm text-on-surface-variant">53 unidades em queima ativa</span>
+        </div>
+
+        <div className="rounded-xl bg-surface-container-lowest p-5 shadow-sm border border-surface-container flex flex-col gap-2">
+          <div className="flex items-center justify-between text-on-surface-variant">
+            <span className="font-label-sm font-semibold uppercase tracking-wider">Atenção (30 a 90d)</span>
+            <span className="material-symbols-outlined text-secondary text-[20px]">schedule</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-headline-md font-bold text-on-surface">24</span>
+            <span className="font-code-sm text-secondary font-semibold">Prioridade FIFO</span>
+          </div>
+          <span className="font-body-sm text-on-surface-variant">4 lotes termolábeis incluídos</span>
+        </div>
+
+        <div className="rounded-xl bg-surface-container-lowest p-5 shadow-sm border border-surface-container flex flex-col gap-2">
+          <div className="flex items-center justify-between text-on-surface-variant">
+            <span className="font-label-sm font-semibold uppercase tracking-wider">Controlados (P. 344)</span>
+            <span className="material-symbols-outlined text-on-surface text-[20px]">lock</span>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-headline-md font-bold text-on-surface">68</span>
+            <span className="font-code-sm text-tertiary font-semibold">100% conciliado</span>
+          </div>
+          <span className="font-body-sm text-on-surface-variant">Último envio SNGPC: hoje 08:00</span>
+        </div>
+      </div>
+
+      {/* Barra de Busca e Filtros */}
+      <div className="rounded-xl bg-surface-container-lowest p-4 shadow-sm border border-surface-container flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+        <div className="relative flex-1">
+          <span className="material-symbols-outlined text-on-surface-variant text-[20px] absolute left-3 top-1/2 -translate-y-1/2">
+            search
+          </span>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar por medicamento, princípio ativo (DCB), lote ou código EAN..."
+            className="w-full h-10 pl-10 pr-4 rounded-lg bg-surface-container-low font-body-md text-on-surface focus:outline-none focus:bg-surface-container transition-colors"
+          />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="h-10 px-3 rounded-lg bg-surface-container-low font-label-sm text-on-surface focus:outline-none focus:bg-surface-container"
+          >
+            <option value="todos">Validade: Todos os Status</option>
+            <option value="critico">Crítico (&lt; 30 dias)</option>
+            <option value="atencao">Atenção (30 a 90 dias)</option>
+            <option value="regular">Regular (&gt; 180 dias)</option>
+          </select>
+          <select className="h-10 px-3 rounded-lg bg-surface-container-low font-label-sm text-on-surface focus:outline-none focus:bg-surface-container">
+            <option value="todos">Categoria: Todas</option>
+            <option value="controlados">Portaria 344 (C1 / B1)</option>
+            <option value="termolabeis">Termolábeis (2°C - 8°C)</option>
+            <option value="genericos">Genéricos</option>
+          </select>
+        </div>
+      </div>
+
       {/* Tabela de Lotes */}
-      <div className="rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden flex flex-col" id="tabela-lotes">
+      <div className="rounded-xl bg-surface-container-lowest shadow-sm overflow-hidden flex flex-col border border-surface-container" id="tabela-lotes">
         <div className="px-6 py-4 bg-surface-container-low flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="font-title-md text-on-surface font-semibold">Tabela de Lotes Ativos &amp; Segregados</span>
@@ -93,10 +191,18 @@ export default function ControleLotesSNGPCPage() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <button type="button" className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Atualizar dados">
+            <button
+              type="button"
+              className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              title="Atualizar dados"
+            >
               <span className="material-symbols-outlined text-[20px]">refresh</span>
             </button>
-            <button type="button" className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Visualização em colunas personalizadas">
+            <button
+              type="button"
+              className="p-1.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              title="Visualização em colunas personalizadas"
+            >
               <span className="material-symbols-outlined text-[20px]">view_column</span>
             </button>
           </div>
@@ -398,7 +504,7 @@ export default function ControleLotesSNGPCPage() {
       {/* Bento Grid (Gráficos e Indicadores) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Card 1: Heatmap Físico */}
-        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm border border-surface-container flex flex-col justify-between">
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
               <span className="font-title-md font-semibold">Ocupação Física da Farmácia</span>
@@ -441,56 +547,56 @@ export default function ControleLotesSNGPCPage() {
               </div>
             </div>
           </div>
-          <button className="w-full py-2.5 rounded-lg bg-surface-container-low font-label-md hover:bg-surface-container transition-colors flex items-center justify-center gap-1.5" type="button">
+          <button
+            className="w-full py-2.5 rounded-lg bg-surface-container-low font-label-md hover:bg-surface-container transition-colors flex items-center justify-center gap-1.5"
+            type="button"
+          >
             <span className="material-symbols-outlined text-[18px]">map</span> Mapa de Endereçamento do Galpão
           </button>
         </div>
 
-        {/* Card 2: Gráfico de Vencimentos */}
-        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm flex flex-col justify-between">
+        {/* Card 2: Curva de Vencimentos */}
+        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm border border-surface-container flex flex-col justify-between">
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
-              <span className="font-title-md font-semibold">Curva de Vencimento (Próx. 12 Meses)</span>
-              <span className="material-symbols-outlined text-tertiary text-[20px]">analytics</span>
+              <span className="font-title-md font-semibold">Previsão de Vencimentos</span>
+              <span className="material-symbols-outlined text-error text-[20px]">calendar_month</span>
             </div>
-            <p className="font-body-sm text-on-surface-variant">Volume de valor financeiro alocado por trimestre de expiração.</p>
+            <p className="font-body-sm text-on-surface-variant">Distribuição de lotes com validade nos próximos 90 dias.</p>
           </div>
-          <div className="my-4 flex flex-col gap-2">
-            <div className="h-32 w-full flex items-end justify-between gap-3 pt-4">
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full bg-error-container rounded-t-md hover:bg-error transition-all relative group" style={{ height: '48%' }}>
-                  <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] py-0.5 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">R$ 14,8k</span>
-                </div>
-                <span className="font-code-sm text-[11px] text-on-surface-variant">Jul-Set</span>
+          <div className="flex flex-col gap-3 my-4">
+            <div className="p-3 rounded-lg bg-error-container/40 flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="font-label-sm font-bold text-on-error-container">Até 30 dias</span>
+                <span className="font-body-sm text-on-error-container/80">9 lotes • R$ 3.410,00</span>
               </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full bg-surface-container-highest rounded-t-md hover:bg-secondary-container transition-all relative group" style={{ height: '65%' }}>
-                  <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] py-0.5 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">R$ 32,1k</span>
-                </div>
-                <span className="font-code-sm text-[11px] text-on-surface-variant">Out-Dez</span>
+              <span className="px-2.5 py-1 rounded-full bg-error text-on-error font-code-sm font-bold">Crítico</span>
+            </div>
+            <div className="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="font-label-sm font-bold">31 a 60 dias</span>
+                <span className="font-body-sm text-on-surface-variant">14 lotes • R$ 8.920,00</span>
               </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full bg-surface-container-highest rounded-t-md hover:bg-secondary-container transition-all relative group" style={{ height: '85%' }}>
-                  <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] py-0.5 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">R$ 58,4k</span>
-                </div>
-                <span className="font-code-sm text-[11px] text-on-surface-variant">Jan-Mar</span>
+              <span className="px-2.5 py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-code-sm font-bold">Atenção</span>
+            </div>
+            <div className="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="font-label-sm font-bold">61 a 90 dias</span>
+                <span className="font-body-sm text-on-surface-variant">10 lotes • R$ 5.180,00</span>
               </div>
-              <div className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
-                <div className="w-full bg-surface-container rounded-t-md hover:bg-tertiary-container transition-all relative group" style={{ height: '98%' }}>
-                  <span className="absolute -top-7 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] py-0.5 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">R$ 112k</span>
-                </div>
-                <span className="font-code-sm text-[11px] text-on-surface-variant">Abr-Jun+</span>
-              </div>
+              <span className="px-2.5 py-1 rounded-full bg-surface-container-highest text-on-surface-variant font-code-sm font-bold">Monitorar</span>
             </div>
           </div>
-          <div className="flex items-center justify-between font-label-sm pt-2">
-            <span className="text-on-surface-variant">Perda projetada: <strong>0.32%</strong></span>
-            <a className="text-secondary font-semibold hover:underline" href="#">Ver análise de risco</a>
-          </div>
+          <button
+            className="w-full py-2.5 rounded-lg bg-surface-container-low font-label-md hover:bg-surface-container transition-colors flex items-center justify-center gap-1.5"
+            type="button"
+          >
+            <span className="material-symbols-outlined text-[18px]">local_offer</span> Gerar Campanha de Queima
+          </button>
         </div>
 
         {/* Card 3: Assinatura Digital SNGPC */}
-        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm flex flex-col justify-between">
+        <div className="rounded-xl bg-surface-container-lowest p-6 shadow-sm border border-surface-container flex flex-col justify-between">
           <div className="flex flex-col gap-1">
             <div className="flex items-center justify-between">
               <span className="font-title-md font-semibold">Chave de Assinatura SNGPC</span>
@@ -503,17 +609,26 @@ export default function ControleLotesSNGPCPage() {
               <span className="font-label-sm font-semibold">Status de Envio Diário</span>
               <span className="px-2 py-0.5 rounded-full bg-tertiary-container/30 text-tertiary font-code-sm font-semibold">Transmitido</span>
             </div>
-            <span className="font-code-sm text-[11px] text-on-surface-variant break-all">Hash: 9F8B2C4D7890AA5512EE45F9812A</span>
+            <span className="font-code-sm text-[11px] text-on-surface-variant break-all">
+              Hash: 9F8B2C4D7890AA5512EE45F9812A
+            </span>
             <div className="flex items-center gap-1.5 text-on-surface-variant font-body-sm mt-1">
               <span className="material-symbols-outlined text-[16px] text-tertiary">check_circle</span>
               Confirmado pelo servidor federal sem rejeições.
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex-1 py-2 rounded-lg bg-surface-container-high font-label-sm hover:bg-surface-container transition-colors" type="button">
+            <button
+              className="flex-1 py-2 rounded-lg bg-surface-container-high font-label-sm hover:bg-surface-container transition-colors"
+              type="button"
+            >
               Gerar Novo Inventário
             </button>
-            <button className="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container transition-colors" title="Log de Erros" type="button">
+            <button
+              className="p-2 rounded-lg bg-surface-container-high hover:bg-surface-container transition-colors"
+              title="Log de Erros"
+              type="button"
+            >
               <span className="material-symbols-outlined text-[18px]">receipt_long</span>
             </button>
           </div>
@@ -522,63 +637,113 @@ export default function ControleLotesSNGPCPage() {
 
       {/* Modal de Entrada de NF */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-on-background/40 backdrop-blur-sm transition-opacity" onClick={handleCloseModal}>
-          <div className="w-full max-w-xl bg-surface-container-lowest h-full shadow-2xl p-8 flex flex-col justify-between overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-50 flex justify-end bg-on-background/40 backdrop-blur-sm transition-opacity"
+          onClick={handleCloseModal}
+        >
+          <form
+            onSubmit={handleSalvarLote}
+            className="w-full max-w-xl bg-surface-container-lowest h-full shadow-2xl p-8 flex flex-col justify-between overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex flex-col gap-6">
               <div className="flex items-center justify-between">
                 <div className="flex flex-col">
                   <span className="font-label-sm text-secondary uppercase font-bold tracking-wider">Entrada de Mercadoria</span>
                   <h2 className="font-headline-lg font-bold">Novo Lote &amp; Nota Fiscal</h2>
                 </div>
-                <button onClick={handleCloseModal} className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+                <button
+                  onClick={handleCloseModal}
+                  className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors"
+                  type="button"
+                >
                   <span className="material-symbols-outlined">close</span>
                 </button>
               </div>
 
-              <form onSubmit={handleSalvarLote} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="font-label-sm font-semibold">Chave de Acesso NF-e (44 Dígitos)</label>
                   <div className="relative">
-                    <input className="w-full h-11 px-3.5 pr-20 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="3524 0700 0000..." type="text" />
-                    <button className="absolute right-2 top-2 px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-sm" type="button">Importar</button>
+                    <input
+                      className="w-full h-11 px-3.5 pr-20 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="3524 0700 0000..."
+                      type="text"
+                    />
+                    <button
+                      className="absolute right-2 top-2 px-2.5 py-1 rounded bg-secondary text-on-secondary font-label-sm"
+                      type="button"
+                    >
+                      Importar
+                    </button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Número do Lote</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="Ex: LT-2024-9100" type="text" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="Ex: LT-2024-9100"
+                      type="text"
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Código EAN</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="789..." type="text" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="789..."
+                      type="text"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="font-label-sm font-semibold">Medicamento / DCB</label>
-                  <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container" placeholder="Ex: Cloridrato de Sertralina 50mg" type="text" />
+                  <input
+                    className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container"
+                    placeholder="Ex: Cloridrato de Sertralina 50mg"
+                    type="text"
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Fabricação</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container" type="date" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container"
+                      type="date"
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Validade Final</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container" type="date" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-body-md focus:outline-none focus:bg-surface-container"
+                      type="date"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Qtd. Caixas</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="50" type="number" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="50"
+                      type="number"
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Preço Custo</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="R$ 15,20" type="text" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="R$ 15,20"
+                      type="text"
+                    />
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <label className="font-label-sm font-semibold">Preço Venda</label>
-                    <input className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container" placeholder="R$ 29,90" type="text" />
+                    <input
+                      className="h-11 px-3.5 rounded-lg bg-surface-container-low font-code-sm focus:outline-none focus:bg-surface-container"
+                      placeholder="R$ 29,90"
+                      type="text"
+                    />
                   </div>
                 </div>
                 <div className="flex flex-col gap-1.5">
@@ -590,18 +755,25 @@ export default function ControleLotesSNGPCPage() {
                     <option>Cofre de Controlados (Portaria 344)</option>
                   </select>
                 </div>
-              </form>
+              </div>
             </div>
 
             <div className="pt-6 flex items-center justify-end gap-3">
-              <button onClick={handleCloseModal} className="px-4 py-2.5 rounded-lg bg-surface-container-low font-label-md hover:bg-surface-container transition-colors" type="button">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2.5 rounded-lg bg-surface-container-low font-label-md hover:bg-surface-container transition-colors"
+                type="button"
+              >
                 Cancelar
               </button>
-              <button onClick={handleSalvarLote} className="px-6 py-2.5 rounded-lg bg-secondary text-on-secondary font-label-md hover:bg-secondary/90 transition-colors shadow-sm flex items-center gap-1.5" type="button">
+              <button
+                className="px-6 py-2.5 rounded-lg bg-secondary text-on-secondary font-label-md hover:bg-secondary/90 transition-colors shadow-sm flex items-center gap-1.5"
+                type="submit"
+              >
                 <span className="material-symbols-outlined text-[18px]">save</span> Salvar Lote e Assinar SNGPC
               </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>

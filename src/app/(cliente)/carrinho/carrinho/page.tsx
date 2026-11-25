@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function CartPage() {
   return (
     // Removi a tag <div> externa que englobava toda a página, pois o layout raiz já faz o container do <main>
-    <div className="flex-grow max-w-7xl mx-auto px-6 pt-12 pb-24 w-full">
+    <div className="grow max-w-7xl mx-auto px-6 pt-12 pb-24 w-full">
       {/* Título da Página */}
       <div className="flex flex-col gap-2 mb-12">
         <div className="flex items-center gap-2 text-slate-500">
@@ -90,7 +90,7 @@ export default function CartPage() {
                     >
                       <span className="material-symbols-outlined text-[16px]">remove</span>
                     </button>
-                    <span className="text-sm font-bold px-3 text-center min-w-[2.5rem]">
+                    <span className="text-sm font-bold px-3 text-center min-w-10">
                       1
                     </span>
                     <button
@@ -101,7 +101,7 @@ export default function CartPage() {
                       <span className="material-symbols-outlined text-[16px]">add</span>
                     </button>
                   </div>
-                  <div className="text-right min-w-[90px]">
+                  <div className="text-right min-w-22.5">
                     <span className="text-lg text-slate-900 font-bold block leading-none">
                       R$ 58,00
                     </span>

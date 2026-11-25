@@ -7,15 +7,17 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-surface-container-lowest font-sans text-on-surface">
+    <div className="flex h-screen overflow-hidden bg-surface-container-lowest font-sans text-on-surface">
       {/* MENU LATERAL (Sidebar) */}
-      <aside className="w-64 bg-surface-container-low border-r border-surface-container flex flex-col justify-between hidden md:flex">
-        <div>
+      <aside className="w-64 shrink-0 bg-surface-container-low border-r border-surface-container hidden md:flex flex-col justify-between h-full">
+        <div className="flex flex-col overflow-y-auto">
           <div className="p-4 flex items-center gap-2 border-b border-surface-container">
             <span className="material-symbols-outlined text-primary">local_pharmacy</span>
             <div className="flex flex-col">
               <span className="font-title-md font-bold leading-tight">Santa Maria</span>
-              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">Gestão &amp; SNGPC</span>
+              <span className="text-[10px] font-bold text-secondary uppercase tracking-wider">
+                Gestão &amp; SNGPC
+              </span>
             </div>
           </div>
 
@@ -60,7 +62,7 @@ export default function AdminLayout({
         </div>
 
         {/* Rodapé da Sidebar */}
-        <div className="p-3 flex flex-col gap-2 border-t border-surface-container">
+        <div className="p-3 flex flex-col gap-2 border-t border-surface-container shrink-0">
           <div className="p-3 rounded-lg bg-surface-container-lowest shadow-sm flex flex-col gap-0.5">
             <span className="text-xs font-semibold text-tertiary flex items-center gap-1">
               <span className="material-symbols-outlined text-[15px]">wifi_tethering</span> Plantão Online
@@ -103,7 +105,7 @@ export default function AdminLayout({
           </div>
         </header>
 
-        {/* CONTEÚDO DINÂMICO (Aqui entram as páginas internas como controle-lotes, dashboard, etc.) */}
+        {/* CONTEÚDO DINÂMICO */}
         <main className="flex-1 overflow-y-auto p-6">
           {children}
         </main>

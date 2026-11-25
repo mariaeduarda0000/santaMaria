@@ -1,286 +1,450 @@
 "use client";
 
-import { useState } from "react";
-import Head from "next/head";
+import { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
-  // Estados para controlar a interface
-  const [role, setRole] = useState<"client" | "admin">("client");
-  const [clientAuthMode, setClientAuthMode] = useState<"login" | "register">("login");
-  const [showClientPassword, setShowClientPassword] = useState(false);
-  const [showAdminPassword, setShowAdminPassword] = useState(false);
+function LoginContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginIdentifier, setLoginIdentifier] = useState("");
+
+  // Abre direto na aba de cadastro se vier de /cadastro
+  useEffect(() => {
+    if (searchParams.get("modo") === "cadastro") {
+      setAuthMode("register");
+    }
+  }, [searchParams]);
+
+  // Lógica de redirecionamento automático (Cliente vs Admin)
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const identificador = loginIdentifier.trim().toLowerCase();
+
+    // Exemplo de regra: se for e-mail corporativo/admin, redireciona para /admin
+    if (identificador.endsWith("@santamaria.com") || identificador === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/");
+    }
+  };
+
+  const handleRegisterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push("/");
+  };
 
   return (
-    <>
-      {/* Importando a fonte e os ícones do Google */}
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          rel="stylesheet"
-        />
-      </Head>
+    <main className="w-full min-h-screen flex flex-col lg:flex-row items-stretch bg-slate-50">
+      {/* LADO ESQUERDO: Painel Institucional (Azul Marinho Profundo / Neutral #0F172A) */}
+      <section className="lg:w-[46%] xl:w-[44%] bg-slate-900 text-white flex flex-col justify-between p-8 sm:p-12 xl:p-16 relative overflow-hidden shrink-0 border-r border-slate-800">
+        {/* Auras Decorativas nas cores do projeto */}
+        <div className="absolute -right-20 -top-20 w-96 h-96 bg-red-600/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-20 bottom-1/4 w-80 h-80 bg-blue-900/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute right-10 bottom-10 w-72 h-72 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
 
-      <main className="w-full min-h-screen flex flex-col lg:flex-row items-stretch bg-bege-suave">
-        
-        {/* LADO ESQUERDO: Painel Institucional */}
-        <section className="lg:w-[46%] xl:w-[44%] bg-zinc-900 text-white flex flex-col justify-between p-8 sm:p-12 xl:p-16 relative overflow-hidden shrink-0 border-r border-zinc-800">
-          
-          {/* Elementos Decorativos de Fundo (Aura Farmacêutica) */}
-          <div className="absolute -right-20 -top-20 w-96 h-96 bg-esmeralda opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute -left-20 bottom-1/4 w-80 h-80 bg-zinc-400 opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute right-10 bottom-10 w-72 h-72 bg-esmeralda opacity-15 rounded-full blur-3xl pointer-events-none"></div>
-          
-          {/* Topo: Link de Retorno e Marca */}
-          <div className="relative z-10 flex flex-col gap-8">
-            <a href="#" className="inline-flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-sm font-semibold tracking-wide group w-fit">
-              <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">arrow_back</span>
-              <span>Voltar para a Drogaria Santa Maria</span>
-            </a>
-            
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-esmeralda to-esmeralda-dark flex items-center justify-center shadow-lg shadow-esmeralda-dark/40 ring-2 ring-esmeralda/30">
-                <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1", fontSize: "28px" }}>local_pharmacy</span>
-              </div>
-              <div>
-                <div className="font-bold text-2xl tracking-tight text-white flex items-center gap-2">
-                  DROGARIA SANTA MARIA
-                  <span className="text-esmeralda text-xs font-semibold px-2 py-0.5 rounded-full bg-esmeralda-dark/40 border border-esmeralda/40 uppercase tracking-widest">Farma</span>
-                </div>
-                <p className="font-mono text-xs text-zinc-400 tracking-wider uppercase mt-0.5">Cuidado, Tradição & Saúde Farmacêutica desde 1994</p>
-              </div>
-            </div>
-            
-            {/* Headline & Apresentação */}
-            <div className="mt-2">
-              <span className="text-xs uppercase tracking-widest text-esmeralda font-semibold bg-esmeralda-dark/30 border border-esmeralda/30 px-3 py-1 rounded-full inline-flex items-center gap-1.5 mb-4">
-                <span className="w-2 h-2 rounded-full bg-esmeralda inline-block animate-pulse"></span>
-                30 Anos de Excelência Farmacêutica
+        {/* Topo: Link de Retorno e Marca */}
+        <div className="relative z-10 flex flex-col gap-8">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm font-semibold tracking-wide group w-fit"
+          >
+            <span className="material-symbols-outlined text-lg group-hover:-translate-x-1 transition-transform">
+              arrow_back
+            </span>
+            <span>Voltar para a Drogaria Santa Maria</span>
+          </Link>
+
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-xl bg-linear-to from-red-600 to-red-700 flex items-center justify-center shadow-lg shadow-red-950/50 ring-2 ring-red-500/30 shrink-0">
+              <span
+                className="material-symbols-outlined text-white"
+                style={{ fontVariationSettings: "'FILL' 1", fontSize: "28px" }}
+              >
+                local_pharmacy
               </span>
-              <h1 className="text-3xl xl:text-4xl font-extrabold text-white leading-tight">
-                Sua saúde e seus medicamentos em primeiro lugar com segurança integral.
-              </h1>
-              <p className="text-zinc-300 text-base mt-3 leading-relaxed max-w-xl font-normal">
-                Acesse seu histórico médico, receituários validados pela ANVISA, convênios de coparticipação e acompanhe entregas com rastreamento térmico rigoroso.
+            </div>
+            <div>
+              <div className="font-bold text-xl sm:text-2xl tracking-tight text-white flex flex-wrap items-center gap-2">
+                DROGARIA SANTA MARIA
+                <span className="text-red-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-red-600/40 border border-red-500/40 uppercase tracking-widest">
+                  Farma
+                </span>
+              </div>
+              <p className="font-mono text-xs text-slate-400 tracking-wider uppercase mt-0.5">
+                Cuidado, Tradição & Saúde Farmacêutica desde 1994
               </p>
             </div>
           </div>
-          
-          {/* Centro: Destaques */}
-          <div className="relative z-10 my-8 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            {[
-              { icon: 'verified', title: 'Precisão Farmacêutica', desc: 'Farmacêuticos RT online e em balcão 24 horas por dia.' },
-              { icon: 'account_balance', title: 'Farmácia Popular & SNGPC', desc: 'Integração oficial com Ministério da Saúde e ANVISA.' },
-              { icon: 'thermometer', title: 'Cadeia Térmica 2h', desc: 'Insulinas e termolábeis com monitoramento digital ativo.' },
-              { icon: 'folder_managed', title: 'Cofre de Receitas', desc: 'Renovação e lembretes automáticos de uso contínuo.' }
-            ].map((item, idx) => (
-              <div key={idx} className="flex items-start gap-3 bg-white/[0.04] border border-white/10 hover:border-white/20 transition-all p-3.5 rounded-xl backdrop-blur-sm">
-                <div className="w-9 h-9 rounded-lg bg-esmeralda/20 text-esmeralda flex items-center justify-center shrink-0 border border-esmeralda/30">
-                  <span className="material-symbols-outlined text-xl">{item.icon}</span>
-                </div>
-                <div>
-                  <h4 className="text-sm font-semibold text-white">{item.title}</h4>
-                  <p className="text-xs text-zinc-400 mt-0.5 leading-snug">{item.desc}</p>
-                </div>
-              </div>
-            ))}
+
+          {/* Headline & Apresentação */}
+          <div className="mt-2">
+            <span className="text-xs uppercase tracking-widest text-emerald-400 font-semibold bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full inline-flex items-center gap-2 mb-4">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
+              30 Anos de Excelência Farmacêutica
+            </span>
+            <h1 className="text-3xl xl:text-4xl font-extrabold text-white leading-tight">
+              Sua saúde e seus medicamentos em primeiro lugar com segurança integral.
+            </h1>
+            <p className="text-slate-300 text-base mt-3 leading-relaxed max-w-xl font-normal">
+              Acesse seu histórico médico, receituários validados pela ANVISA, convênios de coparticipação e acompanhe entregas com rastreamento térmico rigoroso.
+            </p>
           </div>
-          
-          {/* Rodapé Lado Esquerdo */}
-          <div className="relative z-10 pt-6 border-t border-zinc-800 flex flex-wrap items-center justify-between gap-4 text-xs text-zinc-500">
-            <div className="flex items-center gap-4">
-              <span className="inline-flex items-center gap-1.5 text-zinc-300 font-medium">
-                <span className="material-symbols-outlined text-esmeralda text-base">lock</span> Criptografia SSL 256-bit
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-zinc-300 font-medium">
-                <span className="material-symbols-outlined text-esmeralda text-base">shield_with_heart</span> ICP-Brasil & ANVISA
+        </div>
+
+        {/* Centro: Cards de Destaques */}
+        <div className="relative z-10 my-8 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div className="flex items-start gap-3 bg-white/5 border border-white/10 hover:border-white/20 transition-all p-3.5 rounded-xl backdrop-blur-sm">
+            <div className="w-9 h-9 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center shrink-0 border border-red-500/30">
+              <span className="material-symbols-outlined text-xl">verified</span>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white">Precisão Farmacêutica</h4>
+              <p className="text-xs text-slate-400 mt-0.5 leading-snug">
+                Farmacêuticos RT online e em balcão 24 horas por dia.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 bg-white/5 border border-white/10 hover:border-white/20 transition-all p-3.5 rounded-xl backdrop-blur-sm">
+            <div className="w-9 h-9 rounded-lg bg-blue-800/40 text-blue-300 flex items-center justify-center shrink-0 border border-blue-500/30">
+              <span className="material-symbols-outlined text-xl">account_balance</span>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white">Farmácia Popular & SNGPC</h4>
+              <p className="text-xs text-slate-400 mt-0.5 leading-snug">
+                Integração oficial com Ministério da Saúde e ANVISA.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 bg-white/5 border border-white/10 hover:border-white/20 transition-all p-3.5 rounded-xl backdrop-blur-sm">
+            <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+              <span className="material-symbols-outlined text-xl">thermometer</span>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white">Cadeia Térmica 2h</h4>
+              <p className="text-xs text-slate-400 mt-0.5 leading-snug">
+                Insulinas e termolábeis com monitoramento digital ativo.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3 bg-white/5 border border-white/10 hover:border-white/20 transition-all p-3.5 rounded-xl backdrop-blur-sm">
+            <div className="w-9 h-9 rounded-lg bg-indigo-500/20 text-indigo-300 flex items-center justify-center shrink-0 border border-indigo-400/30">
+              <span className="material-symbols-outlined text-xl">folder_managed</span>
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-white">Cofre de Receitas</h4>
+              <p className="text-xs text-slate-400 mt-0.5 leading-snug">
+                Renovação e lembretes automáticos de uso contínuo.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Rodapé Lado Esquerdo */}
+        <div className="relative z-10 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-400">
+          <div className="flex items-center gap-4">
+            <span className="inline-flex items-center gap-1.5 text-slate-300 font-medium">
+              <span className="material-symbols-outlined text-emerald-400 text-base">lock</span>
+              Criptografia SSL 256-bit
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-slate-300 font-medium">
+              <span className="material-symbols-outlined text-blue-400 text-base">shield_with_heart</span>
+              ICP-Brasil & ANVISA
+            </span>
+          </div>
+          <div className="font-mono text-slate-500">CRF-SP 48.910 • AFE 1.09241-2</div>
+        </div>
+      </section>
+
+      {/* LADO DIREITO: Autenticação Unificada (Fundo Off-White / Branco) */}
+      <section className="lg:w-[54%] xl:w-[56%] bg-white flex flex-col justify-center items-center p-6 sm:p-12 xl:p-16 overflow-y-auto">
+        <div className="w-full max-w-xl mx-auto flex flex-col justify-between">
+          <div>
+            {/* Abas: Acessar Minha Conta | Criar Novo Cadastro */}
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3 mb-7">
+              <div className="flex gap-6">
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("login")}
+                  className={`text-lg pb-3 -mb-3.5 transition-all cursor-pointer ${
+                    authMode === "login"
+                      ? "font-bold text-slate-900 border-b-2 border-red-600"
+                      : "font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent"
+                  }`}
+                >
+                  Acessar Minha Conta
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setAuthMode("register")}
+                  className={`text-lg pb-3 -mb-3.5 transition-all cursor-pointer ${
+                    authMode === "register"
+                      ? "font-bold text-slate-900 border-b-2 border-red-600"
+                      : "font-semibold text-slate-400 hover:text-slate-700 border-b-2 border-transparent"
+                  }`}
+                >
+                  Criar Novo Cadastro
+                </button>
+              </div>
+              <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 font-semibold px-2.5 py-1 rounded-full hidden sm:inline-flex items-center gap-1">
+                <span className="material-symbols-outlined text-sm">local_offer</span>
+                Até 60% OFF em Genéricos
               </span>
             </div>
-            <div className="font-mono text-zinc-500">CRF-SP 48.910 • AFE 1.09241-2</div>
-          </div>
-        </section>
 
-        {/* LADO DIREITO: Autenticação */}
-        <section className="lg:w-[54%] xl:w-[56%] bg-bege-suave flex flex-col justify-center items-center p-6 sm:p-12 xl:p-16 overflow-y-auto">
-          <div className="w-full max-w-xl mx-auto flex flex-col justify-between min-h-[640px]">
-            
-            <div>
-              {/* Seletor de Ambiente */}
-              <div className="bg-cinza-claro/30 p-1.5 rounded-xl flex items-center gap-1.5 border border-cinza-claro mb-6">
-                <button 
-                  onClick={() => setRole("client")}
-                  className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${role === "client" ? "bg-white text-zinc-900 shadow-sm border border-cinza-claro" : "text-zinc-500 hover:text-zinc-800 border border-transparent"}`}
-                >
-                  <span className="material-symbols-outlined text-lg text-esmeralda">person</span>
-                  <span>Sou Cliente</span>
-                </button>
-                <button 
-                  onClick={() => setRole("admin")}
-                  className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 ${role === "admin" ? "bg-white text-zinc-900 shadow-sm border border-cinza-claro" : "text-zinc-500 hover:text-zinc-800 border border-transparent"}`}
-                >
-                  <span className="material-symbols-outlined text-lg text-zinc-700">shield_person</span>
-                  <span>Farmacêutico / Admin</span>
-                </button>
-              </div>
+            {/* MODO LOGIN */}
+            {authMode === "login" && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-slate-900">Bem-vindo de volta!</h2>
+                  <p className="text-slate-500 text-sm mt-1">
+                    Acesse seus pedidos, receitas digitais arquivadas e vantagens do Clube Santa Maria.
+                  </p>
+                </div>
 
-              {/* CONTAINER CLIENTE */}
-              {role === "client" && (
-                <div>
-                  <div className="flex items-center justify-between border-b border-cinza-claro pb-3 mb-6">
-                    <div className="flex gap-4">
-                      <button 
-                        onClick={() => setClientAuthMode("login")}
-                        className={`font-semibold text-lg pb-3 -mb-3 transition-all ${clientAuthMode === "login" ? "font-bold text-zinc-900 border-b-2 border-esmeralda" : "text-zinc-500 hover:text-zinc-800 border-b-2 border-transparent"}`}
+                {/* Botões Sociais no Topo (conforme Figma) */}
+                <div className="grid grid-cols-2 gap-3 mb-5">
+                  <button
+                    type="button"
+                    className="py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl text-sm font-semibold text-slate-800 flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                  >
+                    <span className="font-bold text-red-600">G</span>
+                    <span>Entrar com Google</span>
+                  </button>
+                  <button
+                    type="button"
+                    className="py-2.5 px-4 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl text-sm font-semibold text-slate-800 flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-lg text-blue-900">account_balance</span>
+                    <span>Entrar com gov.br</span>
+                  </button>
+                </div>
+
+                <div className="relative my-5 flex items-center justify-center">
+                  <div className="w-full border-t border-slate-200" />
+                  <span className="bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400 whitespace-nowrap">
+                    ou com suas credenciais
+                  </span>
+                  <div className="w-full border-t border-slate-200" />
+                </div>
+
+                <form className="space-y-4" onSubmit={handleLoginSubmit}>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-800 mb-1.5">
+                      CPF ou E-mail
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="material-symbols-outlined absolute left-3.5 text-slate-400 text-xl">
+                        badge
+                      </span>
+                      <input
+                        type="text"
+                        required
+                        value={loginIdentifier}
+                        onChange={(e) => setLoginIdentifier(e.target.value)}
+                        placeholder="000.000.000-00 ou seu@email.com"
+                        className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1.5">
+                      <label className="text-sm font-semibold text-slate-800">Senha de Acesso</label>
+                      <a href="#" className="text-xs font-semibold text-blue-900 hover:underline">
+                        Esqueceu a senha?
+                      </a>
+                    </div>
+                    <div className="relative flex items-center">
+                      <span className="material-symbols-outlined absolute left-3.5 text-slate-400 text-xl">
+                        lock
+                      </span>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        required
+                        placeholder="••••••••"
+                        className="w-full pl-11 pr-11 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none transition-all"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3.5 text-slate-400 hover:text-slate-600 cursor-pointer"
                       >
-                        Acessar Minha Conta
-                      </button>
-                      <button 
-                        onClick={() => setClientAuthMode("register")}
-                        className={`font-semibold text-lg pb-3 -mb-3 transition-all ${clientAuthMode === "register" ? "font-bold text-zinc-900 border-b-2 border-esmeralda" : "text-zinc-500 hover:text-zinc-800 border-b-2 border-transparent"}`}
-                      >
-                        Criar Novo Cadastro
+                        <span className="material-symbols-outlined text-lg">
+                          {showPassword ? "visibility_off" : "visibility"}
+                        </span>
                       </button>
                     </div>
-                    <span className="text-xs text-esmeralda-dark bg-esmeralda/10 border border-esmeralda/20 font-semibold px-2.5 py-1 rounded-full hidden sm:inline-flex items-center gap-1">
-                      <span className="material-symbols-outlined text-sm">local_offer</span> Até 60% OFF
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <label className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        defaultChecked
+                        className="w-4 h-4 rounded border-slate-300 accent-red-600"
+                      />
+                      <span>Lembrar neste navegador</span>
+                    </label>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
+                      <span className="material-symbols-outlined text-sm">verified_user</span>
+                      Conexão Segura
                     </span>
                   </div>
 
-                  {/* LOGIN CLIENTE */}
-                  {clientAuthMode === "login" && (
-                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                      <div className="mb-5">
-                        <h2 className="text-2xl font-bold text-zinc-900">Bem-vindo de volta!</h2>
-                        <p className="text-zinc-600 text-sm mt-1">Acesse seus pedidos, receitas digitais e vantagens.</p>
-                      </div>
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 px-5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm tracking-wide transition-all shadow-md shadow-red-600/20 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-xl">login</span>
+                    <span>Acessar Conta / Minhas Compras</span>
+                  </button>
+                </form>
 
-                      <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                        <div>
-                          <label className="block text-sm font-semibold text-zinc-800 mb-1.5">CPF ou E-mail</label>
-                          <div className="relative flex items-center">
-                            <span className="material-symbols-outlined absolute left-3.5 text-zinc-400 text-xl">badge</span>
-                            <input type="text" required placeholder="000.000.000-00 ou seu@email.com" className="w-full pl-11 pr-4 py-3 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-esmeralda focus:ring-2 focus:ring-esmeralda/20 outline-none transition-all shadow-sm" />
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <div className="flex justify-between items-center mb-1.5">
-                            <label className="text-sm font-semibold text-zinc-800">Senha de Acesso</label>
-                            <a href="#" className="text-xs font-semibold text-esmeralda-dark hover:underline">Esqueceu a senha?</a>
-                          </div>
-                          <div className="relative flex items-center">
-                            <span className="material-symbols-outlined absolute left-3.5 text-zinc-400 text-xl">lock</span>
-                            <input type={showClientPassword ? "text" : "password"} required placeholder="••••••••" className="w-full pl-11 pr-11 py-3 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-esmeralda focus:ring-2 focus:ring-esmeralda/20 outline-none transition-all shadow-sm" />
-                            <button type="button" onClick={() => setShowClientPassword(!showClientPassword)} className="absolute right-3.5 text-zinc-400 hover:text-zinc-600">
-                              <span className="material-symbols-outlined text-lg">{showClientPassword ? "visibility_off" : "visibility"}</span>
-                            </button>
-                          </div>
-                        </div>
-
-                        <button type="submit" className="w-full py-3.5 px-5 rounded-xl bg-esmeralda hover:bg-esmeralda-dark text-white font-bold text-sm tracking-wide transition-all shadow-md shadow-esmeralda/20 flex items-center justify-center gap-2 mt-2">
-                          <span className="material-symbols-outlined text-xl">login</span>
-                          <span>Acessar Conta</span>
-                        </button>
-                      </form>
-                    </div>
-                  )}
-
-                  {/* CADASTRO CLIENTE */}
-                  {clientAuthMode === "register" && (
-                    <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                      <div className="mb-5">
-                        <h2 className="text-2xl font-bold text-zinc-900">Crie seu Cadastro</h2>
-                        <p className="text-zinc-600 text-sm mt-1">Habilite retirada expressa e convênios.</p>
-                      </div>
-                      
-                      <form className="space-y-3.5" onSubmit={(e) => e.preventDefault()}>
-                        <div>
-                          <label className="block text-sm font-semibold text-zinc-800 mb-1">Nome Completo</label>
-                          <div className="relative flex items-center">
-                            <span className="material-symbols-outlined absolute left-3 text-zinc-400 text-lg">person</span>
-                            <input type="text" required placeholder="Nome oficial" className="w-full pl-10 pr-3 py-2.5 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-esmeralda focus:ring-2 focus:ring-esmeralda/20 outline-none shadow-sm" />
-                          </div>
-                        </div>
-                        {/* Outros campos de cadastro condensados por espaço */}
-                        <div className="grid grid-cols-2 gap-3">
-                           <div>
-                            <label className="block text-sm font-semibold text-zinc-800 mb-1">CPF</label>
-                            <input type="text" required placeholder="000.000.000-00" className="w-full px-3 py-2.5 bg-white border border-cinza-claro rounded-xl text-sm focus:border-esmeralda focus:ring-2 outline-none shadow-sm" />
-                           </div>
-                           <div>
-                            <label className="block text-sm font-semibold text-zinc-800 mb-1">WhatsApp</label>
-                            <input type="tel" required placeholder="(00) 90000-0000" className="w-full px-3 py-2.5 bg-white border border-cinza-claro rounded-xl text-sm focus:border-esmeralda focus:ring-2 outline-none shadow-sm" />
-                           </div>
-                        </div>
-                        <button type="submit" className="w-full py-3.5 px-5 rounded-xl bg-esmeralda hover:bg-esmeralda-dark text-white font-bold text-sm tracking-wide transition-all shadow-md mt-4 flex items-center justify-center gap-2">
-                          <span className="material-symbols-outlined text-xl">how_to_reg</span>
-                          <span>Concluir Cadastro</span>
-                        </button>
-                      </form>
-                    </div>
-                  )}
+                {/* Banner Clube Santa Maria */}
+                <div
+                  onClick={() => setAuthMode("register")}
+                  className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-200/80 hover:border-red-200 transition-colors flex items-center gap-3.5 cursor-pointer"
+                >
+                  <div className="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center shrink-0">
+                    <span className="material-symbols-outlined text-xl">local_pharmacy</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">
+                      Ainda não faz parte do Clube Santa Maria?
+                    </p>
+                    <p className="text-xs text-slate-500 mt-0.5">
+                      Cadastre seu CPF em 1 minuto e ative descontos em mais de 4.000 remédios.
+                    </p>
+                  </div>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* CONTAINER ADMIN */}
-              {role === "admin" && (
-                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                  <div className="mb-5 bg-zinc-900 text-white p-4 rounded-xl flex items-center gap-3.5 shadow-md">
-                    <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 flex items-center justify-center shrink-0">
-                      <span className="material-symbols-outlined text-2xl">medical_services</span>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-base leading-snug">Portal Técnico & Gestão</h3>
-                      <p className="text-xs text-zinc-400">Acesso exclusivo para RTs e Gestores.</p>
+            {/* MODO CADASTRO */}
+            {authMode === "register" && (
+              <div>
+                <div className="mb-6">
+                  <h2 className="text-2xl font-bold text-slate-900">Crie seu Cadastro</h2>
+                  <p className="text-slate-500 text-sm mt-1">
+                    Habilite retirada expressa, convênios e descontos exclusivos do Clube Santa Maria.
+                  </p>
+                </div>
+
+                <form className="space-y-4" onSubmit={handleRegisterSubmit}>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-800 mb-1">
+                      Nome Completo
+                    </label>
+                    <div className="relative flex items-center">
+                      <span className="material-symbols-outlined absolute left-3.5 text-slate-400 text-lg">
+                        person
+                      </span>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Seu nome completo"
+                        className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none"
+                      />
                     </div>
                   </div>
 
-                  <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                      <div>
-                        <label className="block text-sm font-semibold text-zinc-800 mb-1.5">Registro CRF</label>
-                        <input type="text" required placeholder="Ex: CRF-SP 012345" className="w-full px-3 py-3 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-zinc-900 focus:ring-2 outline-none uppercase font-mono shadow-sm" />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-zinc-800 mb-1.5">E-mail Corporativo</label>
-                        <input type="email" required placeholder="nome@santamaria.com" className="w-full px-3 py-3 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-zinc-900 focus:ring-2 outline-none shadow-sm" />
-                      </div>
-                    </div>
-
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                     <div>
-                      <label className="block text-sm font-semibold text-zinc-800 mb-1.5">Senha Master</label>
-                      <div className="relative flex items-center">
-                        <input type={showAdminPassword ? "text" : "password"} required placeholder="••••••••••••" className="w-full pl-3 pr-11 py-3 bg-white border border-cinza-claro rounded-xl text-zinc-900 text-sm focus:border-zinc-900 focus:ring-2 outline-none shadow-sm" />
-                        <button type="button" onClick={() => setShowAdminPassword(!showAdminPassword)} className="absolute right-3.5 text-zinc-400 hover:text-zinc-600">
-                          <span className="material-symbols-outlined text-lg">{showAdminPassword ? "visibility_off" : "visibility"}</span>
-                        </button>
-                      </div>
+                      <label className="block text-sm font-semibold text-slate-800 mb-1">CPF</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="000.000.000-00"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none"
+                      />
                     </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-800 mb-1">WhatsApp</label>
+                      <input
+                        type="tel"
+                        required
+                        placeholder="(00) 90000-0000"
+                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none"
+                      />
+                    </div>
+                  </div>
 
-                    <button type="submit" className="w-full py-3.5 px-5 rounded-xl bg-zinc-900 hover:bg-black text-white font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 mt-2">
-                      <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
-                      <span>Autenticar no SNGPC</span>
-                    </button>
-                  </form>
-                </div>
-              )}
-            </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-800 mb-1">E-mail</label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="seu@email.com"
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none"
+                    />
+                  </div>
 
-            {/* Rodapé do Formulário */}
-            <div className="mt-8 pt-6 border-t border-cinza-claro flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-base text-esmeralda-dark">support_agent</span>
-                <span>Central: <strong className="text-zinc-800">0800 770 1994</strong></span>
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-800 mb-1">Senha</label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Crie uma senha segura"
+                      className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 text-sm focus:bg-white focus:border-blue-900 focus:ring-2 focus:ring-blue-900/15 outline-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 px-5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm tracking-wide transition-all shadow-md shadow-red-600/20 mt-2 flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-xl">how_to_reg</span>
+                    <span>Concluir Cadastro</span>
+                  </button>
+                </form>
+
+                <p className="text-center text-sm text-slate-600 mt-5">
+                  Já possui cadastro?{" "}
+                  <button
+                    type="button"
+                    onClick={() => setAuthMode("login")}
+                    className="font-bold text-blue-900 hover:underline cursor-pointer"
+                  >
+                    Acessar minha conta
+                  </button>
+                </p>
               </div>
-              <div className="flex items-center gap-3">
-                <a href="#" className="hover:text-esmeralda-dark transition-colors">Privacidade</a>
-                <span>•</span>
-                <a href="#" className="hover:text-esmeralda-dark transition-colors">ANVISA</a>
-              </div>
-            </div>
-
+            )}
           </div>
-        </section>
-      </main>
-    </>
+
+          {/* Rodapé do Formulário */}
+          <div className="mt-8 pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-500">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-base text-red-600">support_agent</span>
+              <span>
+                Central Farmacêutica: <strong className="text-slate-800">0800 770 1994</strong> (24h)
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <a href="#" className="hover:text-blue-900 transition-colors">Política de Privacidade</a>
+              <span>•</span>
+              <a href="#" className="hover:text-blue-900 transition-colors">Normas Sanitárias</a>
+              <span>•</span>
+              <a href="#" className="hover:text-blue-900 transition-colors">ANVISA</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50" />}>
+      <LoginContent />
+    </Suspense>
   );
 }
