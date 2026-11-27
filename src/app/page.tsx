@@ -7,22 +7,22 @@ const QuantityInput = () => {
   const [qty, setQty] = useState(1);
   return (
     <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
-      <button 
-        type="button" 
-        className="w-7 h-8 flex items-center justify-center text-slate-700 hover:bg-slate-200 rounded text-sm font-bold transition-colors" 
+      <button
+        type="button"
+        className="w-7 h-8 flex items-center justify-center text-slate-700 hover:bg-slate-200 rounded text-sm font-bold transition-colors"
         onClick={() => setQty(prev => Math.max(1, prev - 1))}
       >
         -
       </button>
-      <input 
-        className="w-8 text-center bg-transparent text-sm font-semibold text-slate-900 focus:outline-none" 
-        readOnly 
-        type="text" 
-        value={qty} 
+      <input
+        className="w-8 text-center bg-transparent text-sm font-semibold text-slate-900 focus:outline-none"
+        readOnly
+        type="text"
+        value={qty}
       />
-      <button 
-        type="button" 
-        className="w-7 h-8 flex items-center justify-center text-slate-700 hover:bg-slate-200 rounded text-sm font-bold transition-colors" 
+      <button
+        type="button"
+        className="w-7 h-8 flex items-center justify-center text-slate-700 hover:bg-slate-200 rounded text-sm font-bold transition-colors"
         onClick={() => setQty(prev => Math.min(99, prev + 1))}
       >
         +
@@ -47,7 +47,7 @@ export default function PharmacyPage() {
     setRxSuccess(true);
     setFileName('');
     e.currentTarget.reset();
-    
+
     setTimeout(() => {
       document.getElementById('rx-success')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }, 100);
@@ -82,12 +82,12 @@ export default function PharmacyPage() {
         {/* Main Header */}
         <div className="px-margin bg-white">
           <div className="max-w-7xl mx-auto h-20 flex items-center justify-between gap-space-lg">
-            <div className="flex items-center gap-space-md shrink-0">
-              <img alt="Drogaria Santa Maria Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDxEZKi1Z_l8FwAfUqJAFX1z3b3zAjd1tOzCE3E9Wcu3uMV41mZ4frV-O1quNc-1waqbeQ43qh505M25miMZ_gMADav7eHHWBq8sAsXgNEGWS9WDme7anuOD4jl6NHZl0VwZIW-F-5RS8T_TmLrh6_ZRlHMYiDoFKcaQ560-gbPFtvC2xZGpBvhJl412CNuQAZqXow4oU_SE3U3nTuQpiOwsytmfM5XZJpJ3-sa0Iba6A" />
-              <div className="flex flex-col">
-                <span className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 leading-none">Drogaria Santa Maria</span>
-                <span className="text-xs text-slate-500 font-medium tracking-wide">Farmácia & Manipulação</span>
-              </div>
+            <div className="flex items-center shrink-0">
+              <img
+                src="/logo.jpg"
+                alt="Drogaria Santa Maria"
+                className="h-14 w-auto object-contain"
+              />
             </div>
 
             <div className="flex-1 max-w-2xl hidden md:flex items-center">
@@ -185,7 +185,7 @@ export default function PharmacyPage() {
                   <div className="flex flex-wrap items-center gap-space-md">
                     <a className="px-space-lg py-space-md rounded-lg bg-red-600 text-white text-sm font-bold shadow-md hover:bg-red-700 transition-all flex items-center gap-space-xs group" href="#catalogo-destaques">
                       <span>Explorar Ofertas do Mês</span>
-                      <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span> 
+                      <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                   </div>
                 </div>
@@ -415,20 +415,20 @@ export default function PharmacyPage() {
                         <input required type="tel" className="h-11 px-space-md rounded-lg bg-slate-50 border border-slate-200 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/40" placeholder="(11) 98765-4321" />
                       </div>
                     </div>
-                    
+
                     <div className="flex flex-col gap-1">
                       <label className="text-sm font-medium text-slate-700">Arquivo da Receita</label>
-                      <div 
-                        className="cursor-pointer border-2 border-dashed border-blue-900/30 rounded-xl p-space-lg flex flex-col items-center justify-center text-center bg-slate-50 hover:bg-blue-50/50 transition-colors" 
+                      <div
+                        className="cursor-pointer border-2 border-dashed border-blue-900/30 rounded-xl p-space-lg flex flex-col items-center justify-center text-center bg-slate-50 hover:bg-blue-50/50 transition-colors"
                         onClick={() => fileInputRef.current?.click()}
                       >
                         <span className="material-symbols-outlined text-[32px] text-blue-900 mb-2">cloud_upload</span>
                         <p className="text-sm font-medium text-slate-800">Clique para selecionar o arquivo</p>
-                        <input 
-                          type="file" 
-                          className="hidden" 
-                          ref={fileInputRef} 
-                          onChange={handleFileSelected} 
+                        <input
+                          type="file"
+                          className="hidden"
+                          ref={fileInputRef}
+                          onChange={handleFileSelected}
                         />
                         {fileName && (
                           <div className="mt-2 text-xs text-emerald-700 font-bold flex items-center gap-1">
@@ -438,13 +438,13 @@ export default function PharmacyPage() {
                         )}
                       </div>
                     </div>
-                    
+
                     <button type="submit" className="w-full py-3 rounded-lg bg-red-600 text-white text-sm font-bold hover:bg-red-700 transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer">
                       <span className="material-symbols-outlined text-[20px]">send</span> Enviar Prescrição
                     </button>
                   </form>
                 </div>
-                
+
                 {rxSuccess && (
                   <div id="rx-success" className="mt-space-md p-space-md rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-center gap-space-sm">
                     <span className="material-symbols-outlined text-emerald-600 text-[24px]">task_alt</span>
@@ -500,29 +500,60 @@ export default function PharmacyPage() {
       </main>
 
       {/* FOOTER */}
-      <footer className="w-full bg-white py-space-xl text-slate-900 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-margin">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8">
-            <div className="flex flex-col gap-4 lg:col-span-2">
-              <div className="flex items-center gap-3">
-                <img alt="Drogaria Santa Maria Logo" className="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrDxEZKi1Z_l8FwAfUqJAFX1z3b3zAjd1tOzCE3E9Wcu3uMV41mZ4frV-O1quNc-1waqbeQ43qh505M25miMZ_gMADav7eHHWBq8sAsXgNEGWS9WDme7anuOD4jl6NHZl0VwZIW-F-5RS8T_TmLrh6_ZRlHMYiDoFKcaQ560-gbPFtvC2xZGpBvhJl412CNuQAZqXow4oU_SE3U3nTuQpiOwsytmfM5XZJpJ3-sa0Iba6A" />
-                <span className="text-xl font-bold text-slate-900">Drogaria Santa Maria</span>
-              </div>
-              <p className="text-sm text-slate-500 max-w-sm">Compromisso ético, saúde e precisão farmacêutica. Ampla linha de medicamentos e manipulação.</p>
+      <footer className="w-full bg-[#0B2545] text-slate-300 mt-auto border-t-4 border-[#0047AB]">
+        <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8 text-xs">
+          {/* Coluna 1 */}
+          <div className="flex flex-col gap-3">
+            <div className="bg-white rounded-lg px-3 py-1.5 w-fit">
+              <img
+                src="/logo.jpg"
+                alt="Drogaria São João"
+                className="h-10 w-auto object-contain"
+              />
             </div>
-            <div className="flex flex-col gap-2">
-              <span className="font-bold text-blue-900 mb-2">Atendimento</span>
-              <a className="text-sm text-slate-600 hover:text-red-600 transition-colors" href="#">Central de Ajuda</a>
-              <a className="text-sm text-slate-600 hover:text-red-600 transition-colors" href="#">Tele-Farmácia 24h</a>
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="font-bold text-blue-900 mb-2">Institucional</span>
-              <a className="text-sm text-slate-600 hover:text-red-600 transition-colors" href="#">Quem Somos</a>
-              <a className="text-sm text-slate-600 hover:text-red-600 transition-colors" href="#">Nossas Filiais</a>
+            <p className="text-slate-400 leading-relaxed">
+              Cuidando da sua saúde com agilidade, procedência garantida e orientação farmacêutica em tempo real.
+            </p>
+            <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+              <span className="material-symbols-outlined text-[16px]">verified</span>
+              Autorizada ANVISA • CRF-SP
             </div>
           </div>
-          <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
-            <p>© 2025 Drogaria Santa Maria S.A. Todos os direitos reservados.</p>
+
+          {/* Coluna 2 */}
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white font-bold uppercase tracking-wider mb-1">Atendimento</h3>
+            <span>Segunda a Sábado: 07h às 22h</span>
+            <span>Domingos e Feriados: 08h às 20h</span>
+            <span className="text-white font-semibold mt-1">WhatsApp: (14) 99999-0000</span>
+            <span>sac@drogariasantamaria.com.br</span>
+          </div>
+
+          {/* Coluna 3 */}
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white font-bold uppercase tracking-wider mb-1">Institucional</h3>
+            <a href="#" className="hover:text-white transition-colors">Política de Privacidade (LGPD)</a>
+            <a href="#" className="hover:text-white transition-colors">Trocas e Devoluções</a>
+            <a href="#" className="hover:text-white transition-colors">Envio de Receitas Digitais</a>
+            <a href="#" className="hover:text-white transition-colors">Farmácia Popular / PBM</a>
+          </div>
+
+          {/* Coluna 4 */}
+          <div className="flex flex-col gap-2">
+            <h3 className="text-white font-bold uppercase tracking-wider mb-1">Formas de Pagamento</h3>
+            <div className="flex flex-wrap gap-2 mt-1">
+              <span className="px-2.5 py-1 rounded bg-white/10 text-white font-semibold">PIX (5% OFF)</span>
+              <span className="px-2.5 py-1 rounded bg-white/10 text-white font-semibold">Visa</span>
+              <span className="px-2.5 py-1 rounded bg-white/10 text-white font-semibold">Mastercard</span>
+              <span className="px-2.5 py-1 rounded bg-white/10 text-white font-semibold">Elo</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/10 py-4 px-6">
+          <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400">
+            <span>© 2026 Drogaria Santa Maria Ltda. CNPJ: 00.000.000/0001-00</span>
+            <span>Farmacêutico Responsável: Dr. Carlos Eduardo • CRF-SP 00000</span>
           </div>
         </div>
       </footer>

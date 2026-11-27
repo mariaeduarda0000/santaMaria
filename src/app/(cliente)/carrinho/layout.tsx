@@ -9,18 +9,12 @@ export default function ClienteLayout({ children }: { children: React.ReactNode 
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-[#0047AB] flex items-center justify-center text-white shadow-sm">
-              <span className="material-symbols-outlined text-[24px]">local_pharmacy</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base font-extrabold text-[#0047AB] leading-tight tracking-tight">
-                DROGARIA SANTA MARIA
-              </span>
-              <span className="text-[10px] font-bold text-red-600 uppercase tracking-widest">
-                Tradição &amp; Saúde
-              </span>
-            </div>
+          <Link href="/" className="flex items-center shrink-0">
+            <img
+              src="/logo.jpg"
+              alt="Drogaria Santa Maria"
+              className="h-14 w-auto object-contain"
+            />
           </Link>
 
           {/* Stepper (1. Carrinho -> 2. Identificação -> 3. Pagamento) */}

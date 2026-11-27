@@ -131,7 +131,7 @@ export default function DashboardPage() {
 
         <div className="flex items-end justify-around gap-3 h-48 pt-4 border-b border-slate-100">
           {barras.map((b) => (
-            <div key={b.label} className="flex flex-col items-center gap-2 flex-1 max-w-[90px]">
+            <div key={b.label} className="flex flex-col items-center gap-2 flex-1 max-w-22.5">
               <span className="font-mono text-[11px] font-semibold text-slate-600">
                 R$ {(b.valor / 1000).toFixed(1)}k
               </span>
